@@ -20,20 +20,20 @@ __Дополнительные задачи:__
 ## Общая последовательность действий
   
   1. в папке <openvino>/deployment_tools/model_downloader/  запустить скрипт downloader.py с параметрами --name squeezenet1.1 --output <destination_folder> 
-
   ```bash
   $ cd C:\Intel\computer_vision_sdk\deployment_tools\model_downloader
   $ python downloader.py --name squeezenet1.1 --output <destination_folder>
   ```  
+ 
+  2. Создать копию файла `<project_source>/src/practice2.cpp` и назвать ее `<project_source>/src/practice2_YOUR_NAME.cpp`. Далее изменять код только в файле `<project_source>/src/practice2_YOUR_NAME.cpp`, но не в `<project_source>/src/practice2.cpp`.
   
-  2. Сделать форк upstream-репозитория, затем клонировать origin к себе на локальную машину. Для инструкций можно обратиться к разделу [Общие инструкции по работе с Git][git-intro] в [практической работе 1][practice1].
-  3. Собрать проект с помощью CMake и MS VS (см. раздел [Сборка проекта с помощью CMake и MS VS][cmake-msvs] в [практической работе 1][practice1]). В результате успешной сборки в build-каталоге в директории `bin` долен появить исполняемый файл `practice2.exe`  
-  4. Создать новую ветку для разработки собственного приложения (см. раздел [Общие инструкции по работе с Git][git-intro] в [практической работе 1][practice1]).
-  5. Создать копию файла `<project_source>/src/practice2.cpp` и назвать ее `<project_source>/src/practice2_YOUR_NAME.cpp`. Далее изменять код только в файле `<project_source>/src/practice2_YOUR_NAME.cpp`, но не в `<project_source>/src/practice2.cpp`.
-  6. Убедиться, что проект успешно собирается и создается новый исполняемый файл `<project_build>/bin/practice2_YOUR_NAME.exe`.
-  7. Прислать Pull Request с внесенными изменениями. Пометить в конце названия `(NOT READY)`. По мере готовности решений основных задач Pull Request можно будет переименовать.
-  8. В файле `<project_source>/src/practice2_YOUR_NAME.cpp` реализовать классификацию изображения. Путь к файлу с изображением передается в программу с помощью ключа `--image`. Детектор загружается из файла, заданного посредством ключа `--detector`. Полный список принимаемых параметров можно посмотреть запустив исполняемый файл с ключом `--help`. См. документацию к классу [cv::dnn::Net][opencv_dnn_net] (методы `readNet`, `setInput` и `forward`) и пространству имен [cv:dnn][opencv_dnn] (метод `blobFromImage`). Также полезным будет посмотреть примеры работы с dnn из [официальных семплов OpenCV][opencv_examples]   
-  9. Решить задачи из списка [Дополнительные задачи][tasks].
+  3. Убедиться, что проект успешно собирается и создается новый исполняемый файл `<project_build>/bin/practice2_YOUR_NAME.exe`.
+  
+  4. Прислать Pull Request с внесенными изменениями. Пометить в конце названия `(NOT READY)`. По мере готовности решений основных задач Pull Request можно будет переименовать.
+  
+  5. В файле `<project_source>/src/practice2_YOUR_NAME.cpp` реализовать классификацию изображения. Путь к файлу с изображением передается в программу с помощью ключа `--image`. Детектор загружается из файла, заданного посредством ключа `--detector`. Полный список принимаемых параметров можно посмотреть запустив исполняемый файл с ключом `--help`. См. документацию к классу [cv::dnn::Net][opencv_dnn_net] (методы `readNet`, `setInput` и `forward`) и пространству имен [cv:dnn][opencv_dnn] (метод `blobFromImage`). Также полезным будет посмотреть примеры работы с dnn из [официальных семплов OpenCV][opencv_examples]
+  
+  6. Решить задачи из списка [Дополнительные задачи][tasks].
 
 <!-- LINKS -->
   
