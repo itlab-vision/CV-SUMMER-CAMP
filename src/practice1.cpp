@@ -34,9 +34,6 @@ int main(int argc, char** argv)
 	String imgName(parser.get<String>("image"));
 
 	
-	
-	
-	
 	// Show image
 	
 	
