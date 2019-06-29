@@ -67,9 +67,9 @@ __Дополнительные задачи__
   1. Клонировать [origin][origin] репозиторий к себе на локальный компьютер,
      воспользовавшись следующей командой:
 
-    ```bash
-    $ git clone https://github.com/github-account/CV-SUMMER-CAMP
-    ```
+        ```bash
+        $ git clone https://github.com/github-account/CV-SUMMER-CAMP
+        ```
 
   1. Перейти в директорию `CV-SUMMER-CAMP`:
 
@@ -102,6 +102,7 @@ __Дополнительные задачи__
     ```bash
     $ git config --local core.editor "'c:/program files/sublime text 2/sublime_text.exe' -n -w"
     ```
+
 
 Когда сделан форк репозитория у вас создается по умолчанию единственная ветка
 master. Тем не менее, при решении независимых задач следует создавать рабочие
