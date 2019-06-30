@@ -15,7 +15,6 @@ class Classificator
 {
 public:
 	virtual Mat Classify(Mat image) = 0 {}
-	virtual ~Classificator() = 0 {}
 };
 
 class DnnClassificator : Classificator
