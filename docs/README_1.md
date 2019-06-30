@@ -298,7 +298,7 @@ Microsoft Visual Studio 2015. Далее для определенности в�
         ```
   1. Запуск с параметрами из Visual Studio. В этом случае необходимо открыть свойства проекта, выбрать правильную конфигурацию проекта (Debug, Release), далее в свойствах выбрать раздел меню `Debugging`, и в элементе `Debugging Arguments` внести ваши параметры.
 
-        ![input parameters](docs/README1_parameters.png)
+        ![input parameters](README1_parameters.png)
 <!-- LINKS -->
 
 [origin]: https://github.com/itlab-vision/CV-SUMMER-CAMP
