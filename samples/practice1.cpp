@@ -4,6 +4,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
+#include "filter.h"
+
 using namespace cv;
 using namespace std;
 
@@ -17,8 +19,8 @@ const char* cmdOptions =
 
 int main(int argc, char** argv)
 {
-	// Process input arguments
-	CommandLineParser parser(argc, argv, cmdOptions);
+    // Process input arguments
+    CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
 
     if (parser.has("help"))
@@ -31,19 +33,19 @@ int main(int argc, char** argv)
         parser.printErrors();
         return 0;
     }
-	
-	// Load image
-	String imgName(parser.get<String>("image"));
+    
+    // Load image
+    String imgName(parser.get<String>("image"));
 
-	
-	// Filter image
+    
+    // Filter image
 
 
-	// Show image
-	
-	
-	
-	
-	
-	return 0;
+    // Show image
+    
+    
+    
+    
+    
+    return 0;
 }
