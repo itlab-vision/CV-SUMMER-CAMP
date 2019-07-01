@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 
 #include <opencv2/core.hpp>
@@ -18,18 +19,18 @@ const char* cmdOptions =
 
 
 int main(int argc, const char** argv) {
-  // Parse command line arguments.
-  CommandLineParser parser(argc, argv, cmdOptions);
-  parser.about(cmdAbout);
+    // Parse command line arguments.
+    CommandLineParser parser(argc, argv, cmdOptions);
+    parser.about(cmdAbout);
 
-  // If help option is given, print help message and exit.
-  if (parser.get<bool>("help")) {
-    parser.printMessage();
+    // If help option is given, print help message and exit.
+    if (parser.get<bool>("help")) {
+        parser.printMessage();
+        return 0;
+    }
+
+    // Do something cool.
+    cout << "This is empty template sample." << endl;
+
     return 0;
-  }
-
-  // Do something cool.
-  cout << "This is empty template sample." << endl;
-
-  return 0;
 }

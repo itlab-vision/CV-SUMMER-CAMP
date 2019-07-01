@@ -11,6 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 find_package(OpenCV 4.0 REQUIRED)
 set(LIBRARY_DEPS ${OpenCV_LIBS})
 
+#Include dairectories with sources
+include_directories(src)
+
 # Move executable files 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -18,4 +21,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
 
 # Add projects in solution
-add_subdirectory(src)
+add_subdirectory(samples)
