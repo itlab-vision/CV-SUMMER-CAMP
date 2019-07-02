@@ -13,9 +13,9 @@ const char* cmdAbout = "Sample of OpenCV usage. ";
 
 const char* cmdOptions =
 "{ i  image         | <none> | image to process        }"
-"{ w  width         |        | width for image resize  }"
-"{ h  height        |        | height for image resize }"
-"{ h ? help usage   |        | print help message      }";
+"{ w  width         | <none> | width for image resize  }"
+"{ h  height        | <none> | height for image resize }"
+"{ q ? help usage   | <none> | print help message      }";
 
 int main(int argc, char** argv)
 {
