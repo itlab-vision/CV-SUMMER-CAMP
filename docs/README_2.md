@@ -96,7 +96,7 @@ __Дополнительные задачи:__
  
   
 <!-- LINKS -->
-  
+
 [practice1]: README_1.md
 [git-intro]: README_1.md#Общие-инструкции-по-работе-с-git
 [cmake-msvs]: README_1.md#Сборка-проекта-с-помощью-cmake-и-microsoft-visual-studio 
