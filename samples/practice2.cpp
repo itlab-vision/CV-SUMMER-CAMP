@@ -1,36 +1,54 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 
-#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
-#include <opencv2/dnn.hpp>
 
-using namespace std;
+#include "classificator.h"
+
 using namespace cv;
-using namespace cv::dnn;
+using namespace std;
 
-const char* cmdAbout =
-    "This is an empty application that can be treated as a template for your "
-    "own doing-something-cool applications.";
+const char* cmdAbout = "Sample of OpenCV usage. ";
 
 const char* cmdOptions =
-    "{ i image        |        | image to process         }"
-    "{ h ? help usage |        | print help message       }";
+"{ i  image                             | <none> | image to process                  }"
+"{ w  width                             |        | image width for classification    }"
+"{ h  heigth                            |        | image heigth fro classification   }"
+"{ model_path                           |        | path to model                     }"
+"{ config_path                          |        | path to model configuration       }"
+"{ label_path                           |        | path to class labels              }"
+"{ mean                                 |        | vector of mean model values       }"
+"{ swap                                 |        | swap R and B channels. TRUE|FALSE }"
+"{ q ? help usage                       |        | print help message                }";
+
+int main(int argc, char** argv)
+{
+	// Process input arguments
+	CommandLineParser parser(argc, argv, cmdOptions);
+	parser.about(cmdAbout);
+
+	if (parser.has("help"))
+	{
+		parser.printMessage();
+		return 0;
+	}
+	if (!parser.check())
+	{
+		parser.printErrors();
+		return 0;
+	}
+
+	// Load image and init parameters
+	String imgName(parser.get<String>("image"));
 
 
-int main(int argc, const char** argv) {
-    // Parse command line arguments.
-    CommandLineParser parser(argc, argv, cmdOptions);
-    parser.about(cmdAbout);
+	//Image classification
+	
+	
+	//Show result
 
-    // If help option is given, print help message and exit.
-    if (parser.get<bool>("help")) {
-        parser.printMessage();
-        return 0;
-    }
 
-    // Do something cool.
-    cout << "This is empty template sample." << endl;
-
-    return 0;
+	return 0;
 }
