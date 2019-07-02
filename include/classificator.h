@@ -14,5 +14,6 @@ using namespace std;
 class Classificator
 {
 public:
+    vector<string> classesNames;
     virtual Mat Classify(Mat image) = 0 {}
 };
