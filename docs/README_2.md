@@ -97,7 +97,7 @@ __Дополнительные задачи:__
   
 <!-- LINKS -->
   
-[practice1]: docs/README_1.md
+[practice1]: https://github.com/itlab-vision/CV-SUMMER-CAMP/blob/master/docs/README_1.md
 [git-intro]: docs/README_1.md#Общие-инструкции-по-работе-с-git
 [cmake-msvs]: docs/README_1.md#Сборка-проекта-с-помощью-cmake-и-microsoft-visual-studio 
 [opencv_dnn]: https://docs.opencv.org/4.1.0/df/d57/namespacecv_1_1dnn.html
