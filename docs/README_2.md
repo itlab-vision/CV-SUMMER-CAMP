@@ -96,12 +96,12 @@ __Дополнительные задачи:__
  
   
 <!-- LINKS -->
-  
-[practice1]: https://github.com/itlab-vision/CV-SUMMER-CAMP/blob/master/docs/README_1.md
-[git-intro]: docs/README_1.md#Общие-инструкции-по-работе-с-git
-[cmake-msvs]: docs/README_1.md#Сборка-проекта-с-помощью-cmake-и-microsoft-visual-studio 
+
+[practice1]: README_1.md
+[git-intro]: README_1.md#Общие-инструкции-по-работе-с-git
+[cmake-msvs]: README_1.md#Сборка-проекта-с-помощью-cmake-и-microsoft-visual-studio 
 [opencv_dnn]: https://docs.opencv.org/4.1.0/df/d57/namespacecv_1_1dnn.html
 [opencv_dnn_net]: https://docs.opencv.org/4.1.0/db/d30/classcv_1_1dnn_1_1Net.html#details
 [opencv_examples]: https://docs.opencv.org/4.1.0/examples.html
 [opencv_dnn_classification_sample]: https://docs.opencv.org/4.1.0/d9/d8d/samples_2dnn_2classification_8cpp-example.html
-[addtasks]: src/README_2.md#Задачи
+[addtasks]: README_2.md#Задачи
