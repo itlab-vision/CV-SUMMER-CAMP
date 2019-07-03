@@ -1,16 +1,21 @@
 #include "filter.h"
-#include <iostream>
-#include <string>
-
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
-
-using namespace cv;
-using namespace std;
 
 Mat GrayFilter::ProcessImage(Mat image)
 {
-	Mat image1;
-	cvtColor(image, image1, COLOR_BGR2GRAY, 0);
-	return image1;
+	Mat tmp;
+	cvtColor(image, tmp, COLOR_BGR2GRAY);
+	return tmp;
+};
+
+ResizeFilter::ResizeFilter(int newWidth, int newHeight)
+{
+	width = newWidth;
+	height = newHeight;
+};
+
+Mat ResizeFilter:: ProcessImage(Mat image)
+{
+	Mat tmp;
+	resize(image, tmp, Size(width, height));
+	return tmp;
 };

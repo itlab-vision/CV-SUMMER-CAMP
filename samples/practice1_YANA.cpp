@@ -34,18 +34,34 @@ int main(int argc, char** argv)
         return 0;
     }
     
-	// Load image
-	String imgName(parser.get<String>("image"));
+    // Load image
+    String imgName(parser.get<String>("image"));
+	Mat image = imread(imgName);
+	int width = parser.get<int>("width");
+	int height = parser.get<int>("height");
+    
+    // Filter image
+	Filter* grayFilter = new GrayFilter;
+	Mat gray;
+	gray = grayFilter->ProcessImage(image);
 
+	Filter* resizeFilter = new ResizeFilter(width, height);
+	ResizeFilter b(width, height);
+	Mat resize;
+	resize = resizeFilter->ProcessImage(image);
 
-	// Filter image
+    // Show image
+	namedWindow("My image", WINDOW_NORMAL);
+	imshow("My image", image);
+	waitKey();
 
+	namedWindow("Gray image", WINDOW_NORMAL);
+	imshow("Gray image", gray);
+	waitKey();
 
-	// Show image
-
-
-
-
-
-	return 0;
+	namedWindow("Resize image", WINDOW_NORMAL);
+	imshow("Resize image", resize);
+	waitKey();
+    
+    return 0;
 }
