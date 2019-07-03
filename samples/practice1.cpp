@@ -41,11 +41,30 @@ int main(int argc, char** argv)
 	cv:Mat image = cv::imread(imgName);
     // Filter image
 
+int width = parser.get<int>("width");
 
+
+ 
+	int height = parser.get<int>("height");
+
+
+ 
+	cv::Mat image = cv::imread(imgName);
+
+
+ 
+
+
+
+ 
+    // Filter image
+	Filter* gr = new GrayFilter();
+	Filter* res = new ResizeFilter(width, height);
     // Show image
 
 	cv::namedWindow("My image", cv::WINDOW_NORMAL);
-	cv::imshow("My image", image);
+	//cv::imshow("My image", gr->ProcessImage(image));
+	cv::imshow("My image", res->ProcessImage(image));
 	cv::waitKey();
     
     
