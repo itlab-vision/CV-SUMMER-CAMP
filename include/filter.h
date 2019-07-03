@@ -18,7 +18,7 @@ class GrayFilter : Filter
 private:
 
 public:
-    Mat ProcessImage(Mat image);
+   static Mat ProcessImage(Mat image);
 	
 };
 
