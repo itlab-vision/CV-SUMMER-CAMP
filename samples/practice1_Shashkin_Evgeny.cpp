@@ -12,9 +12,9 @@ using namespace std;
 const char* cmdAbout = "Sample of OpenCV usage. ";
 
 const char* cmdOptions =
-"{ i  image         | C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg | image to process        }"
-"{ w  width         | 640 | width for image resize  }"
-"{ h  height        | 480 | height for image resize }"
+"{ i  image         | <none> | image to process        }"
+"{ w  width         | <none> | width for image resize  }"
+"{ h  height        | <none> | height for image resize }"
 "{ q ? help usage   | <none> | print help message      }";
 
 int main(int argc, char** argv)
