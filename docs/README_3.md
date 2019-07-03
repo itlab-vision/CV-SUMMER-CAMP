@@ -38,7 +38,7 @@ __Дополнительные задачи:__
         $ cd "C:\Intel\computer_vision_sdk\deployment_tools\tools\model_downloader"
         $ python downloader.py --name mobilenet-ssd --output <destination_folder>
         ```  
-        В этой же папке расположен файл `list_topologies.yml`, в котором собраны параметры, перобразования входных изображений, они понаобятся для правильной конвертации вашей картинки.
+       В этой же папке расположен файл `list_topologies.yml`, в котором собраны параметры, перобразования входных изображений, они понаобятся для правильной конвертации вашей картинки.
         
  1. Создать рабочую ветку `practice-3` ( см. [Практика1][practice1]).
  1. Объявить класс `DnnDetector`, наследника абстрактного класса `Detector`, в файле `detector.h`.
@@ -46,7 +46,7 @@ __Дополнительные задачи:__
  1.  В файле `detector.сpp` реализовать метод `DnnDetector::Detect`.
  
 
-         В вашем случае выходом нейросети `mobilenet-ssd` является тензор (1x1x100x7), при вызове функции reshape(1,100) вы получите двумерную матрицу из 100 строк и 7 столбцов `[image_number, classid, score, left, bottom, right, top]`, где `image_number` - номер изображения (у нас всегда 0, так как мы подаем одно изображение); `classid` - номер класса; `score` - вероятность; `left, bottom, right, top` - координаты ограничивающих прямоугольников в диапазоне от 0 до 1. Подробный пример работы с моделью moilenet-ssd при помощи OpenCV но на языке Python можно посмотреть [по ссылке][opencv_dnn_detect]. 
+        В вашем случае выходом нейросети `mobilenet-ssd` является тензор (1x1x100x7), при вызове функции reshape(1,100) вы получите двумерную матрицу из 100 строк и 7 столбцов `[image_number, classid, score, left, bottom, right, top]`, где `image_number` - номер изображения (у нас всегда 0, так как мы подаем одно изображение); `classid` - номер класса; `score` - вероятность; `left, bottom, right, top` - координаты ограничивающих прямоугольников в диапазоне от 0 до 1. Подробный пример работы с моделью moilenet-ssd при помощи OpenCV но на языке Python можно посмотреть [по ссылке][opencv_dnn_detect]. 
   
  1. Создать копию файла `<project_source>/src/practice3.cpp` и назвать ее `<project_source>/src/practice3_YOUR_NAME.cpp`. Далее изменять код только в файле `<project_source>/src/practice3_YOUR_NAME.cpp`, но не в `<project_source>/src/practice3.cpp`.
  
