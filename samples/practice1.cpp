@@ -36,16 +36,14 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
+	cv::Mat src;
+	src = imread("../Lenna.png");
+	// Filter image
 
-    
-    // Filter image
 
+	// Show image
+	cv::imshow("image", src);
+	waitKey(0);
 
-    // Show image
-    
-    
-    
-    
-    
     return 0;
 }
