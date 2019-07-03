@@ -35,15 +35,17 @@ int main(int argc, char** argv)
     }
     
     // Load image
-    String imgName(parser.get<String>("image"));
-
+    //String imgName(parser.get<String>("C:\\Users\\temp2019\\Desktop\\img.jpg"));
+	String imgName = "C:\\Users\\temp2019\\Desktop\\img.jpg";
+	Mat image = imread(imgName);
     
     // Filter image
 
 
     // Show image
-    
-    
+	namedWindow("My image", WINDOW_NORMAL);
+	imshow("My image", image);
+	waitKey();
     
     
     
