@@ -36,14 +36,18 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
-
+	cv::Mat src,src1;
+	GrayFilter f;
+	ResizeFilter filt(parser.get<int>("width"),parser.get<int>("height"));
+	src = imread(imgName,1);
+	src1 = filt.ProcessImage(src);
     
     // Filter image
 
 
     // Show image
-    
-    
+	cv::imshow("image", src1);
+	cv::waitKey();
     
     
     
