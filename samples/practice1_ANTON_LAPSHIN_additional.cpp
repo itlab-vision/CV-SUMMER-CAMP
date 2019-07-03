@@ -24,47 +24,47 @@ bool is_number(const std::string& s)
 
 int main(int argc, char** argv)
 {
-	// Process input arguments
-	CommandLineParser parser(argc, argv, cmdOptions);
-	parser.about(cmdAbout);
+    // Process input arguments
+    CommandLineParser parser(argc, argv, cmdOptions);
+    parser.about(cmdAbout);
 
-	if (parser.has("help"))
-	{
-		parser.printMessage();
-		return 0;
-	}
-	if (!parser.check())
-	{
-		parser.printErrors();
-		return 0;
-	}
-	// Required parameter check
-	if (!parser.has("src"))
-	{
-		cout << "\"src\" parameter is requred\n";
-		return -1;
-	}
+    if (parser.has("help"))
+    {
+        parser.printMessage();
+        return 0;
+    }
+    if (!parser.check())
+    {
+        parser.printErrors();
+        return 0;
+    }
+    // Required parameter check
+    if (!parser.has("src"))
+    {
+        cout << "\"src\" parameter is requred\n";
+        return -1;
+    }
 
     String src(parser.get<String>("src"));
-	VideoCapture stream;
+    VideoCapture stream;
 
-	// Stream or camera determination
+    // Stream or camera determination
     if (is_number(src))
-		stream = VideoCapture(stoi(src));
-	else
-		stream = VideoCapture(src);	
+        stream = VideoCapture(stoi(src));
+    else
+        stream = VideoCapture(src);    
 
-	if (!stream.isOpened())
-	{
-		cout << "Unable to open stream/camera\n";
-		return -1;
-	}
+    if (!stream.isOpened())
+    {
+        cout << "Unable to open stream/camera\n";
+        return -1;
+    }
 
-	// Main loop
+    // Main loop
     while (true)
     {
         Mat frame;
-		stream >> frame;
+        stream >> frame;
         if (frame.data == NULL) {
             break;
         }
