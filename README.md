@@ -4,6 +4,8 @@
 
 Слайды лекций Летней школы компьютерного зрения расположены в репозитории [CV-SUMMER-CAMP-LECTURES](https://github.com/itlab-vision/CV-SUMMER-CAMP-LECTURES)
 
+![school_program](docs/cvcamp_program.png)
+
 ## Практикум
 
 Практикум направлен на освоение материала Летней школы Intel по компьютерному зрению 2019 и включает в себя пять лабораторных работ:
