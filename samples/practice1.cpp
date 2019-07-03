@@ -35,16 +35,24 @@ int main(int argc, char** argv)
     }
     
     // Load image
-    //String imgName(parser.get<String>("C:\\Users\\temp2019\\Desktop\\img.jpg"));
-	String imgName = "C:\\Users\\temp2019\\Desktop\\img.jpg";
+    String imgName(parser.get<String>("image"));
+	int width = parser.get<int>("width");
+	int height = parser.get<int>("height");
 	Mat image = imread(imgName);
     
-    // Filter image
+    //Filter image
+	GrayFilter gray_filter;
+	ResizeFilter resize_filter(width, height);
 
+	Mat src = imread(imgName);
+	Mat dst1 = gray_filter.ProcessImage(image);
+	Mat dst2 = resize_filter.ProcessImage(image);
 
     // Show image
 	namedWindow("My image", WINDOW_NORMAL);
 	imshow("My image", image);
+	imshow("grayscale", dst1);
+	imshow("resize", dst2);
 	waitKey();
     
     
