@@ -42,9 +42,10 @@ int main(int argc, char** argv)
 
 
     // Show image
-    
-    
-    
+	Mat image = imread("C:\\Users\\temp2019\\Desktop\\streltsovayana\\CV-SUMMER-CAMP\\data\\lobachevsky.jpg");
+	namedWindow("My image", WINDOW_NORMAL);
+	imshow("My image",image);
+	waitKey();
     
     
     return 0;
