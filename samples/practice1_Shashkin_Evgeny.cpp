@@ -36,8 +36,8 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
-		String imgWidth(parser.get<String>("width"));
-		String imgHeight(parser.get<String>("height"));
+		int imgWidth(parser.get<int>("width"));
+		int imgHeight(parser.get<int>("height"));
 
 		Mat image = imread(imgName);
     
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 		Mat grayImage;
 		grayImage=gray.ProcessImage(image);
 
-		ResizeFilter resize(stoi(imgWidth), stoi(imgHeight));
+		ResizeFilter resize(imgWidth,imgHeight);
 		Mat resizedImage;
 		resizedImage = resize.ProcessImage(image);
 
