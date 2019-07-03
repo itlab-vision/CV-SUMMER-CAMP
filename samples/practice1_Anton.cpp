@@ -14,7 +14,7 @@ const char* cmdAbout = "Sample of OpenCV usage. ";
 const char* cmdOptions =
 "{ i  image         | <none> | image to process        }"
 "{ w  width         | <none> | width for image resize  }"
-"{ f filter         | <none> | 0 - Gray 1 - Resize     }"
+"{ f filter         | <none> | G - gray, R - resize    }"
 "{ h  height        | <none> | height for image resize }"
 "{ q ? help usage   | <none> | print help message      }";
 
@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     // Process input arguments
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
-	int filter = 0;
+	string filter = 0;
     if (parser.has("help"))
     {
         parser.printMessage();
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
         return 0;
     }
 	if (parser.has("filter")) {
-		filter = parser.get<int>("filter");
+		filter = parser.get<string>("filter");
 	}
     
     // Load image
@@ -45,18 +45,13 @@ int main(int argc, char** argv)
 	
     
     // Filter image
-
-	switch (filter) {
-	case 0: {
+	if (filter.find('g') != string::npos) {
 		GrayFilter f;
 		src = f.ProcessImage(src);
-		break;
 	}
-	case 1: {
+	if (filter.find('r') != string::npos) {
 		ResizeFilter filt(parser.get<int>("width"), parser.get<int>("height"));
 		src = filt.ProcessImage(src);
-		break;
-	}
 	}
     // Show image
 	cv::imshow("image", src);
