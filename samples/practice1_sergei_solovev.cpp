@@ -38,7 +38,6 @@ int main(int argc, char** argv)
     String imgName(parser.get<String>("image"));
     Mat image = imread(imgName);
     
-    
     // Filter image
     GrayFilter to_gray;
     ResizeFilter resize(parser.get<int>("w"), parser.get<int>("h"));
