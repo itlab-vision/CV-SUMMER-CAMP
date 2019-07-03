@@ -19,7 +19,8 @@ ResizeFilter::ResizeFilter(int newWidth, int newHeight)
 
 Mat ResizeFilter::ProcessImage(Mat image)
 {
-    Mat res(image.size(), CV_8UC3);
+    Mat res;
     resize(image, res, Size(width, height));
     return res;
 }
+
