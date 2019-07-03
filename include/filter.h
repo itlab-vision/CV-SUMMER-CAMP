@@ -33,3 +33,12 @@ public:
     Mat ProcessImage(Mat image);
 	
 };
+
+class RearrangeFilter : Filter
+{
+private:
+
+public:
+	Mat ProcessImage(Mat image);
+
+};
