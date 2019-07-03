@@ -39,10 +39,12 @@ int main(int argc, char** argv)
 
     
     // Filter image
-
+	Mat image = imread("C:/Users/temp2019/Desktop/streltsovayana/CV-SUMMER-CAMP/data/lobachevsky.jpg");
+	GrayFilter a;
+	a.ProcessImage(image);
 
     // Show image
-	Mat image = imread("C:\\Users\\temp2019\\Desktop\\streltsovayana\\CV-SUMMER-CAMP\\data\\lobachevsky.jpg");
+	Mat image = imread("C:/Users/temp2019/Desktop/streltsovayana/CV-SUMMER-CAMP/data/lobachevsky.jpg");
 	namedWindow("My image", WINDOW_NORMAL);
 	imshow("My image",image);
 	waitKey();
