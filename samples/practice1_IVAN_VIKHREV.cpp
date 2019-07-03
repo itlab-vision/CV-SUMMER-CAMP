@@ -19,31 +19,33 @@ const char* cmdOptions =
 
 int main(int argc, char** argv)
 {
-    // Process input arguments
-    CommandLineParser parser(argc, argv, cmdOptions);
-    parser.about(cmdAbout);
+	// Process input arguments
+	CommandLineParser parser(argc, argv, cmdOptions);
+	parser.about(cmdAbout);
 
-    if (parser.has("help"))
-    {
-        parser.printMessage();
-        return 0;
-    }
-    if (!parser.check())
-    {
-        parser.printErrors();
-        return 0;
-    }
-    
-    // Load image
-    String imgName(parser.get<String>("image"));
-	cv::Mat src;
+	if (parser.has("help"))
+	{
+		parser.printMessage();
+		return 0;
+	}
+	if (!parser.check())
+	{
+		parser.printErrors();
+		return 0;
+	}
+
+	// Load image
+	String imgName(parser.get<String>("image"));
+	GrayFilter f;
+	cv::Mat src, dst;
 	src = imread(imgName);
 	// Filter image
 
-
+	dst = f.ProcessImage(src);
 	// Show image
 	cv::imshow("image", src);
+	cv::imshow("image2", dst);
 	waitKey(0);
 
-    return 0;
+	return 0;
 }

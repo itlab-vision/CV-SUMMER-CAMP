@@ -13,6 +13,7 @@ class Filter
     public:
     virtual Mat ProcessImage(Mat image) = 0 {}
 };
+
 class GrayFilter : Filter
 {
 private:
@@ -33,3 +34,4 @@ public:
     Mat ProcessImage(Mat image);
 	
 };
+
