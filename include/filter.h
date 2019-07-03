@@ -11,7 +11,7 @@ using namespace std;
 class Filter
 {
     public:
-    virtual Mat ProcessImage(Mat image) = 0;
+    virtual Mat ProcessImage(Mat image) = 0 {}
 };
 class GrayFilter : Filter
 {
