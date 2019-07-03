@@ -36,16 +36,14 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
-
-    
+	Mat image = imread("unn_neuromobile.jpg");
+	GrayFilter g1;
     // Filter image
-
+	Mat GImage = g1.ProcessImage(image);
 
     // Show image
-    
-    
-    
-    
+	imshow("Gray", GImage);
+	waitKey();
     
     return 0;
 }
