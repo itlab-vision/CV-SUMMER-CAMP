@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     // Load image
     String imgName(parser.get<String>("image"));
 
-	cv:Mat image = cv::imread("C:\\Users\\temp2019\\Desktop\\CV-SUMMER-CAMP\\data\\unn_neuromobile.jpg");
+	cv:Mat image = cv::imread(imgName);
     // Filter image
 
 
