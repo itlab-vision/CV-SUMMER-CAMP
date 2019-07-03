@@ -38,15 +38,26 @@ int main(int argc, char** argv)
     String imgName(parser.get<String>("image"));
     Mat image = imread(imgName);
     
+    //width and height from command line
+    int width = parser.get<int>("w");
+    int height = parser.get<int>("h");
+    
     // Filter image
     GrayFilter to_gray;
-    ResizeFilter resize(parser.get<int>("w"), parser.get<int>("h"));
+    ResizeFilter resize(width, height);
     Mat gray_image = to_gray.ProcessImage(image);
-    Mat resized_image = resize.ProcessImage(gray_image);
+    Mat resized_image = resize.ProcessImage(image);
+    Mat resized_gray_image = resize.ProcessImage(gray_image);
 
-    // Show image
-    namedWindow("My image", WINDOW_NORMAL);
-    imshow("My image", resized_image);
+    // Show all images: original and modified
+    namedWindow("original", WINDOW_NORMAL);
+    imshow("original", image);
+    namedWindow("gray", WINDOW_NORMAL);
+    imshow("gray", gray_image);
+    namedWindow("resized", WINDOW_NORMAL);
+    imshow("resized", resized_image);
+    namedWindow("resized_gray", WINDOW_NORMAL);
+    imshow("resized gray", resized_gray_image);
     waitKey();
     return 0;
 }
