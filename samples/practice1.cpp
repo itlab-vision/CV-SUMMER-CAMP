@@ -35,11 +35,13 @@ int main(int argc, char** argv){
     String imgName(parser.get<String>("image"));
 	cv::Mat image = cv::imread(imgName);
 
+	int width = (parser.get<int>("width"));
+	int height = (parser.get<int>("height"));
     
     // Filter image
 	Filter* grayImage = new GrayFilter();
-
-	Filter* resizeImage = new ResizeFilter(100,100);
+	
+	Filter* resizeImage = new ResizeFilter(width, height);
 
     // Show image
 
