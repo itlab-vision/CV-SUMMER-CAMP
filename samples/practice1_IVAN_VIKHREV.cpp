@@ -15,7 +15,8 @@ const char* cmdOptions =
 "{ i  image         | <none> | image to process        }"
 "{ w  width         | <none> | width for image resize  }"
 "{ h  height        | <none> | height for image resize }"
-"{ f filter         | <none> | choose your filter(0 - resize , 1 - )}"
+"{ f  filter         | <none> | choose your filter(0 - resize , 1 - gray, 2 - random )}"
+"{ n  number       | <none> |  number of parts   }"
 "{ q ? help usage   | <none> | print help message      }";
 
 int main(int argc, char** argv)
@@ -24,15 +25,19 @@ int main(int argc, char** argv)
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
 
-    int filter = 0;
+    int filter = 0, n =0 ;
     if (parser.has("help"))
     {
         parser.printMessage();
         return 0;
     }
+
     if (parser.has("filter")) {
         filter = parser.get<int>("filter");
     }
+	if (parser.has("number")) {
+		n = parser.get<int>("number");
+	}
     if (!parser.check())
     {
         parser.printErrors();
@@ -43,6 +48,7 @@ int main(int argc, char** argv)
     String imgName(parser.get<String>("image"));
     GrayFilter g;
     ResizeFilter r(parser.get<int>("width"), parser.get<int>("height"));
+	MixFilter m(n);
     cv::Mat src, dst;
     src = imread(imgName);
     // Filter image
@@ -52,6 +58,9 @@ int main(int argc, char** argv)
         case 0:
             dst = r.ProcessImage(src);
         break;
+		case 2:
+			dst = m.ProcessImage(src);
+			break;
         default:
             dst = g.ProcessImage(src);
         break;

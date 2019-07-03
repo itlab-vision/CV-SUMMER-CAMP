@@ -35,3 +35,13 @@ public:
     
 };
 
+
+class MixFilter : Filter
+{
+private:
+	int n;
+public:
+	MixFilter(int N);
+	Mat ProcessImage(Mat image);
+
+};
