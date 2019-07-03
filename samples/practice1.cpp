@@ -19,6 +19,7 @@ const char* cmdOptions =
 
 int main(int argc, char** argv)
 {
+	
     // Process input arguments
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
@@ -37,12 +38,15 @@ int main(int argc, char** argv)
     // Load image
     String imgName(parser.get<String>("image"));
 
-    
+	cv:Mat image = cv::imread("C:\\Users\\temp2019\\Desktop\\CV-SUMMER-CAMP\\data\\unn_neuromobile.jpg");
     // Filter image
 
 
     // Show image
-    
+
+	cv::namedWindow("My image", cv::WINDOW_NORMAL);
+	cv::imshow("My image", image);
+	cv::waitKey();
     
     
     
