@@ -17,32 +17,35 @@ const char* cmdOptions =
 "{ h  height        | <none> | height for image resize }"
 "{ q ? help usage   | <none> | print help message      }";
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv){
     // Process input arguments
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
 
-    if (parser.has("help"))
-    {
+    if (parser.has("help")){
         parser.printMessage();
         return 0;
     }
-    if (!parser.check())
-    {
+    if (!parser.check()){
         parser.printErrors();
         return 0;
     }
     
     // Load image
     String imgName(parser.get<String>("image"));
+	cv::Mat image = cv::imread(imgName);
 
     
     // Filter image
+	Filter* grayImage = new GrayFilter();
 
+	Filter* resizeImage = new ResizeFilter(100,100);
 
     // Show image
-    
+
+	cv::namedWindow("My image", cv::WINDOW_NORMAL);
+	cv::imshow("My image", resizeImage->ProcessImage(grayImage->ProcessImage(image)));
+	cv::waitKey(0);
     
     
     
