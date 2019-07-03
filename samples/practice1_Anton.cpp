@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     // Process input arguments
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
-	string filter = 0;
+	string filter;
     if (parser.has("help"))
     {
         parser.printMessage();
