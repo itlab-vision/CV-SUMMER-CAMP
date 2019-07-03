@@ -46,7 +46,6 @@ int main(int argc, char** argv)
 	gray = grayFilter->ProcessImage(image);
 
 	Filter* resizeFilter = new ResizeFilter(width, height);
-	ResizeFilter b(width, height);
 	Mat resize;
 	resize = resizeFilter->ProcessImage(image);
 
