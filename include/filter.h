@@ -20,18 +20,18 @@ private:
 
 public:
     Mat ProcessImage(Mat image);
-	
+    
 };
 
 class ResizeFilter : Filter
 {
 private:
-	int width;
-	int height;
+    int width;
+    int height;
 public:
     ResizeFilter(int newWidth, int newHeight);
-	
+    
     Mat ProcessImage(Mat image);
-	
+    
 };
 
