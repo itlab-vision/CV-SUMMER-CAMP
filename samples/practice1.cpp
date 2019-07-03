@@ -34,12 +34,13 @@ int main(int argc, char** argv)
         parser.printErrors();
         return 0;
     }
-    
+	int width = (parser.get<int>("width"));
+	int height = (parser.get<int>("height"));
     // Load image
     String imgName(parser.get<String>("image"));
 	cv::Mat image = cv::imread(imgName);
 	Filter* f = new GrayFilter();
-	Filter* G = new ResizeFilter(1,600);
+	Filter* G = new ResizeFilter(width,height);
 
 	cv::namedWindow("My image", cv::WINDOW_NORMAL);
 	cv::imshow("My image", G->ProcessImage(image));
