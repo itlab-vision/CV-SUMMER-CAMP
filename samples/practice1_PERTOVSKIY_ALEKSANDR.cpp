@@ -5,6 +5,8 @@
 #include <opencv2/highgui.hpp>
 
 #include "filter.h"
+#include "videostream.h"
+
 
 using namespace cv;
 using namespace std;
@@ -59,6 +61,9 @@ int main(int argc, char** argv)
 	imshow("Resized image", resizedImage);
 	cv::waitKey();
 
+	
+	VideoStream vidStream(0);
+	vidStream.streamToWindow();
 
     
     return 0;
