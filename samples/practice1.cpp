@@ -36,16 +36,21 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
-
+	int width = parser.get<int>("width");
+	int height = parser.get<int>("height");
+	cv::Mat image = cv::imread(imgName);
     
     // Filter image
 
+	Filter*gray_img = new GrayFilter();
+	Filter*resize_img = new ResizeFilter(width, height);
 
     // Show image
-    
-    
-    
-    
+
+	cv::namedWindow("Gray image", cv::WINDOW_NORMAL);
+	cv::imshow("Gray image", gray_img->ProcessImage(image));
+	cv::imshow("Resized image", resize_img->ProcessImage(image));
+	cv::waitKey();
     
     return 0;
 }
