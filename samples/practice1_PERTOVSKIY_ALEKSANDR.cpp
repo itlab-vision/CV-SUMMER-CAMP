@@ -36,16 +36,30 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
+	int width = std::stoi(parser.get<String>("width"));
+	int height = std::stoi(parser.get<String>("height"));
+	Mat image = imread(imgName);
+
 
     
     // Filter image
 
+	GrayFilter grayFilter;
+	Mat grayImage = grayFilter.ProcessImage(image);
 
+	ResizeFilter resizeFilter(width, height);
+	Mat resizedImage = resizeFilter.ProcessImage(image);
     // Show image
     
-    
-    
-    
+	namedWindow("Gray image", WINDOW_NORMAL);
+	imshow("Gray image", grayImage);
+	cv::waitKey();
+
+	namedWindow("Resized image", WINDOW_NORMAL);
+	imshow("Resized image", resizedImage);
+	cv::waitKey();
+
+
     
     return 0;
 }
