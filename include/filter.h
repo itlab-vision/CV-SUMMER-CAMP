@@ -33,3 +33,8 @@ public:
     Mat ProcessImage(Mat image);
 	
 };
+
+class GaussFilter :Filter {
+public:
+	static Mat ProcessImage(Mat image);
+};

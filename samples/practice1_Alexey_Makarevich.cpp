@@ -47,9 +47,11 @@ int main(int argc, char** argv)
 	ResizeFilter resizeF(width, height);
 	Mat resizedImg = resizeF.ProcessImage(Img);
 	Mat grayImg = GrayFilter::ProcessImage(Img);
+	//Mat GaussImg = GaussFilter::ProcessImage(Img); ne rabotaet T_T
 
 	// Show image
 	imshow("Orig", Img);
+	//imshow("Gauss", GaussImg);
 	imshow("Gray", grayImg);
 	imshow("Resized",resizedImg);
 	waitKey();
