@@ -10,26 +10,25 @@ using namespace std;
 
 class Filter
 {
-    public:
-    virtual Mat ProcessImage(Mat image) = 0 {}
+ public:
+	 virtual Mat ProcessImage(Mat image) = 0 {}
 };
+
 class GrayFilter : Filter
 {
-private:
+ private:
 
-public:
+ public:
     Mat ProcessImage(Mat image);
-	
 };
 
 class ResizeFilter : Filter
 {
-private:
+ private:
 	int width;
 	int height;
-public:
+
+ public:
     ResizeFilter(int newWidth, int newHeight);
-	
     Mat ProcessImage(Mat image);
-	
 };
