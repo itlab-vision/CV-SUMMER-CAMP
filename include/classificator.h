@@ -17,3 +17,9 @@ public:
     vector<string> classesNames;
     virtual Mat Classify(Mat image) = 0 {}
 };
+
+class DnnClassificator : public Classificator
+{
+	DnnClassificator();
+	Mat Classify(Mat image);
+};
