@@ -17,3 +17,19 @@ public:
     vector<string> classesNames;
     virtual Mat Classify(Mat image) = 0 {}
 };
+
+class DnnClassificator : Classificator
+{
+private:
+    String modelPath;
+    String configPath;
+    String labelsPath;
+    int inputWidth;
+    int inputHeight;
+    Scalar mean;
+    bool swapRB;
+    Net net;
+public:
+    DnnClassificator(String modelPath, String configPath, String labelsPath, int inputWidth, int inputHeight, Scalar mean = (0, 0, 0, 0), bool swapRB = false);
+    Mat Classify(Mat image);
+};
