@@ -269,7 +269,7 @@ Microsoft Visual Studio 2015 или Microsoft Visual Studio 2017.
         ```
         Обратите внимание, что для сборки проекта необходима версия OpenCV 4.x,
         например, 4.1.0, которую можно скачать [здесь](http://opencv.org/downloads.html).
-        В терминал-классах OpenCV 4.1.0 установлена в директорию `С:\Intel\computer_vision_sdk\opencv`
+        В терминал-классах OpenCV 4.1.0 установлена в директорию `С:\OpenCV41\opencv\build`
 
 С решения `CV_SUMMER_CAMP.sln`. В терминал-классах
      Microsoft Visual Studio располагается по пути:
