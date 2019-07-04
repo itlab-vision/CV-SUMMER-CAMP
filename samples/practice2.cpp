@@ -42,13 +42,23 @@ int main(int argc, char** argv)
 
 	// Load image and init parameters
 	String imgName(parser.get<String>("image"));
-
+	String model_path(parser.get<String>("model_path"));
+	String config_path(parser.get<String>("config_path"));
+	String label_path(parser.get<String>("label_path"));
+	Point classIdPoint;
+	double confidence;
+	Mat image = imread(imgName);
 
 	//Image classification
-	
-	
+	DnnClassificator *classOfImage = new DnnClassificator(model_path, config_path, label_path, image.cols, image.rows, false);
+	Mat result = classOfImage->Classify(image);
+	cout << imgName << endl << model_path << endl << config_path << endl << label_path << endl;
 	//Show result
+	minMaxLoc(result.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
+	int classId = classIdPoint.x;
 
+	cout << "Class: " << classId << endl;
+	cout << "Confidence: " << confidence << endl;
 
 	return 0;
 }

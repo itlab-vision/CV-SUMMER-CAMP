@@ -17,3 +17,32 @@ public:
     vector<string> classesNames;
     virtual Mat Classify(Mat image) = 0 {}
 };
+
+class DnnClassificator : virtual Classificator
+{
+private:
+	string pathtoModel;
+	string pathtoConfig;
+	string pathtoLabels;
+	int width;
+	int height;
+	Scalar mean;
+	bool SwapRB;
+	Net net;
+public:
+	DnnClassificator(string newpathtoModel, string newpathtoConfig, string newpathtoLabels, 
+		int newWidth, int newHeight, bool newSwapRB)
+	{
+		pathtoModel = newpathtoModel;
+		pathtoConfig = newpathtoConfig;
+		pathtoLabels = newpathtoLabels;
+		width = newWidth;
+		height = newHeight;
+		mean = { 103.94,113.78,128 };
+		SwapRB = newSwapRB;
+		net = readNet(pathtoModel, pathtoConfig);
+		net.setPreferableBackend(DNN_BACKEND_OPENCV);
+		net.setPreferableTarget(DNN_TARGET_CPU);
+	}
+	Mat Classify(Mat image);
+};
