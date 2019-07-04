@@ -51,11 +51,11 @@ int main(int argc, char** argv)
 	}
 
     // Filter image
-	GrayFilter grayFilter;
-	ResizeFilter resizeFilter(width, height);
+	GrayFilter *grayFilter = new GrayFilter();
+	ResizeFilter *resizeFilter= new ResizeFilter(width, height);
 
-	Mat grayImage = grayFilter.ProcessImage(image);
-	Mat resizeImage = resizeFilter.ProcessImage(grayImage);
+	Mat grayImage = grayFilter->ProcessImage(image);
+	Mat resizeImage = resizeFilter->ProcessImage(grayImage);
 
     // Show image
 	imshow("display", resizeImage);

@@ -14,7 +14,7 @@ class Filter
 	 virtual Mat ProcessImage(Mat image) = 0 {}
 };
 
-class GrayFilter : Filter
+class GrayFilter : public Filter
 {
  private:
 
@@ -22,7 +22,7 @@ class GrayFilter : Filter
     Mat ProcessImage(Mat image);
 };
 
-class ResizeFilter : Filter
+class ResizeFilter : public Filter
 {
  private:
 	int width;
