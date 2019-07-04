@@ -5,31 +5,47 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-using namespace cv;
-using namespace std;
 
 class Filter
 {
-    public:
-    virtual Mat ProcessImage(Mat image) = 0 {}
+public:
+	virtual void ProcessImage(const cv::Mat &src, cv::Mat &dst) = 0 {}
 };
+
+
+
 class GrayFilter : Filter
 {
 private:
 
 public:
-    Mat ProcessImage(Mat image);
-	
+	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
+
 };
+
+
 
 class ResizeFilter : Filter
 {
 private:
-	int width;
-	int height;
+	int m_width;
+	int m_height;
 public:
-    ResizeFilter(int newWidth, int newHeight);
-	
-    Mat ProcessImage(Mat image);
-	
+	ResizeFilter(int width, int height);
+
+	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
+
+};
+
+
+
+class GaussianFilter
+{
+private:
+	cv::Size m_kernel;
+public:
+	GaussianFilter(const cv::Size &kernel);
+
+	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
+
 };
