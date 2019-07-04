@@ -15,5 +15,31 @@ class Classificator
 {
 public:
     vector<string> classesNames;
-    virtual Mat Classify(Mat image) = 0 {}
+    virtual Mat Classify(Mat image) = 0;
+};
+
+class DnnClassificator: public Classificator
+{
+    string model, config, labels;
+    int inputHeight, inputWidth;
+    Scalar mean;
+    int backendId, targetId;
+    bool swapRB;
+    Net net;
+    double scale;
+public:
+    DnnClassificator(string path_model, string path_config, string path_labels,
+                     int inpw, int inph, bool sw, double sc = 0.017, Scalar m = {0,0,0,0},
+                     int back = DNN_BACKEND_OPENCV, int targ = DNN_TARGET_CPU):
+    model(path_model), config(path_config), labels(path_labels), inputHeight(inph), inputWidth(inpw), swapRB(sw), scale(sc), mean(m), backendId(back), targetId(targ)
+    {
+        
+        net = readNet(model, config);
+        net.setPreferableBackend(backendId);
+        net.setPreferableTarget(targetId);
+        
+    }
+    Mat Classify(Mat image);
+    
+    
 };
