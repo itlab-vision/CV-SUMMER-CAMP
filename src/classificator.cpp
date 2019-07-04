@@ -11,6 +11,8 @@ DnnClassificator::DnnClassificator(String _modelPath, String _configPath, String
 	swapRB = _swapRB;
 
 	net = readNet(modelPath, configPath);
+	net.setPreferableBackend(0);
+	net.setPreferableTarget(0);
 }
 
 Mat DnnClassificator::Classify(Mat image) {
