@@ -39,16 +39,28 @@ int main(int argc, char** argv)
 		parser.printErrors();
 		return 0;
 	}
-
+	
 	// Load image and init parameters
 	String imgName(parser.get<String>("image"));
+	int width(parser.get<int>("width"));
+	int height(parser.get<int>("heigth"));
 
 
+
+
+	string model = "C:\\Users\\temp2019\\GitProject\\classification\\squeezenet\\1.1\\caffe\\squeezenet1.1.caffemodel";
+	string config = "C:\\Users\temp2019\\GitProject\\classification\squeezenet\\1.1\\caffe\\squeezenet1.1.prototxt";
+	string labels = "C:\\Users\temp2019\GitProject\classification\squeezenet\1.1\caffe\squeezenet1.1.labels";
+	Scalar sc(0, 0, 0, 0);
+
+	Mat src = imread(imgName);
+	DnnClassificator dnnClassificator(model,config,labels,width,height,sc,false);
+	
 	//Image classification
 	
-	
+	src=dnnClassificator.Classify(src);
 	//Show result
 
-
+	waitKey();
 	return 0;
 }
