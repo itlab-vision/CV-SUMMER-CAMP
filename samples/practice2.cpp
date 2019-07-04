@@ -52,10 +52,19 @@ int main(int argc, char** argv)
 
 
 	//Image classification
-
+	imgName = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/qwe.jpg"; //C:/CV-Intel/CV-SUMMER-CAMP-build/caffe
 	Mat image = imread(imgName);
+	//cv::namedWindow("My image", cv::WINDOW_NORMAL);
+	//cv::imshow("My image", image);
+	//cv::waitKey(0);
+	model = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/squeezenet1.1.caffemodel";
+	config = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/squeezenet1.1.prototxt";
+	label = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/squeezenet1.1.labels";
 	double scale = 1;
-	mean = { 103.94,116.78,123.68 };
+	width = 632;
+	heigth = 475;
+	mean = { 1,1,1 };
+	swap = false;
 	Classificator* dnnClassificator = new DnnClassificator(model, config, label, scale, width, heigth, mean, swap);
 	Mat prob = dnnClassificator->Classify(image);
 
@@ -65,11 +74,13 @@ int main(int argc, char** argv)
 	minMaxLoc(prob.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
 	int classId = classIdPoint.x;
 
+
 	
 	//Show result
 
 	std::cout << "Class: " << classId << '\n';
 	std::cout << "Confidence: " << confidence << '\n';
+	cv::waitKey(0);
 
 	return 0;
 }

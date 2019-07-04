@@ -30,7 +30,6 @@ private:
 	bool swapRB;
 
 public:
-
 	DnnClassificator(string _model, string _config, string _labels, double _scale, float _inputWidth, float _inputHeight, Scalar _mean, bool _swapRB);
 	Mat Classify(Mat image);
 };
