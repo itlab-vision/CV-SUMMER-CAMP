@@ -41,10 +41,8 @@ int main(int argc, char** argv)
 	Mat image = imread(imgName);
     
     //Filter image
-	Filter* gray_filter;
-	gray_filter = GrayFilter();
-	Filter* resize_filter;
-	ResizeFilter(width, height)
+	GrayFilter gray_filter;
+	ResizeFilter resize_filter(width, height);
 
 	Mat src = imread(imgName);
 	Mat dst1 = gray_filter.ProcessImage(image);
