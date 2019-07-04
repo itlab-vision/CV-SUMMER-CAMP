@@ -21,6 +21,7 @@ const char* cmdOptions =
 "{ label_path                           |        | path to class labels              }"
 "{ mean                                 |        | vector of mean model values       }"
 "{ swap                                 |        | swap R and B channels. TRUE|FALSE }"
+"{ scale                                |        | scale the image for blob          }"
 "{ q ? help usage                       |        | print help message                }";
 
 int main(int argc, char** argv)
@@ -44,18 +45,18 @@ int main(int argc, char** argv)
 	String imgName(parser.get<String>("image"));
     Mat image = imread(imgName);
 
-	//Image classification
     string model = parser.get<string>("model_path");
     string config = parser.get<string>("config_path");
     string labels = parser.get<string>("label_path");
     int inputHeight = parser.get<int>("w");
     int inputWidth = parser.get<int>("h");
-    Scalar mean = parser.get<int>("mean");
-    bool swapRB = parser.get<int>("swap");
-    double scale = 1;
+    Scalar mean = parser.get<Scalar>("mean");
+    bool swapRB = parser.get<bool>("swap");
+    double scale = parser.get<double>("scale");
     
+    //Image classification
     Classificator* dnn = new DnnClassificator(model, config, labels,
-                        inputWidth, inputHeight, swapRB, scale);
+                        inputWidth, inputHeight, swapRB, scale, mean = mean);
     Mat result = dnn->Classify(image);
     
     Point classIdPoint;

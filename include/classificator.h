@@ -29,16 +29,8 @@ class DnnClassificator: public Classificator
     double scale;
 public:
     DnnClassificator(string path_model, string path_config, string path_labels,
-                     int inpw, int inph, bool sw, double sc = 0.017, Scalar m = {0,0,0,0},
-                     int back = DNN_BACKEND_OPENCV, int targ = DNN_TARGET_CPU):
-    model(path_model), config(path_config), labels(path_labels), inputHeight(inph), inputWidth(inpw), swapRB(sw), scale(sc), mean(m), backendId(back), targetId(targ)
-    {
-        
-        net = readNet(model, config);
-        net.setPreferableBackend(backendId);
-        net.setPreferableTarget(targetId);
-        
-    }
+                     int inpw, int inph, bool sw = false, double sc = 1.0,
+                     Scalar m = {0,0,0,0},int back = DNN_BACKEND_OPENCV, int targ = DNN_TARGET_CPU);
     Mat Classify(Mat image);
     
     
