@@ -54,13 +54,11 @@ int main(int argc, char** argv)
 	Mat result = classOfImage->Classify(image);
 	cout << imgName << endl << model_path << endl << config_path << endl << label_path << endl;
 	//Show result
-	minMaxLoc(result, 0, &confidence, 0, &classIdPoint);
+	minMaxLoc(result.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
 	int classId = classIdPoint.x;
 
 	cout << "Class: " << classId << endl;
 	cout << "Confidence: " << confidence << endl;
-	imshow("", result);
-	waitKey();
 
 	return 0;
 }
