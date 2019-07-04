@@ -62,7 +62,8 @@ int main(int argc, char** argv)
 	minMaxLoc(prob.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
 	int classId = classIdPoint.x;
 
-	cout
+	cout << "Class: " << classId << '\n';
+	cout << "Confidence: " << confidence << '\n';
 
 	return 0;
 }
