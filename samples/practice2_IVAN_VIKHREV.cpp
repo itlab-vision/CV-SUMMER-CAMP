@@ -57,40 +57,45 @@ int main(int argc, char** argv)
 
 	Mat image = imread(imgName);
 	Mat prob;
-	Point classIdPoint;
-	double confidence = 0;
+	Point classIdPoint[5] = { (0,0), (0,0), (0,0), (0,0) ,(0,0) };
+	double confidence[5] = { 0,0,0,0,0 };
+	int classId[5] = { 0,0,0,0,0 };
 	//Image classification
-
 	prob = dcl.Classify(image);
-
 	//Show result
-
-	minMaxLoc(prob.reshape(1,1), 0, &confidence, 0, &classIdPoint);
-	int classId = classIdPoint.x;
-	
-	std::string name;
-	
-	std::ifstream in("../../CV-SUMMER-CAMP/data/squeezenet1.1.labels"); // окрываем файл для чтения
-	int count = 0;
-	if (in.is_open())
-	{
-		while (getline(in, name))
-		{
-			if (count == classId)
-			{   
-				break;
-			}
-			count++;
-
-		}
+	Mat tmp = prob.reshape(1, 1);
+	for (int i = 0; i < 5; i++) {
+		minMaxLoc(tmp, 0, &confidence[i], 0, &classIdPoint[i]);
+		tmp.at<float>(0, classIdPoint[i].x) = 0;
+		classId[i] = classIdPoint[i].x;
 	}
-	in.close();   
-	string objClass= "Class: " + std::to_string(classId) + " " + name;
-	string conf = "Confidence: " + std::to_string(confidence); 
-	putText(image, objClass, Size(0, 60), FONT_HERSHEY_COMPLEX_SMALL, 1,
-		Scalar::all(0), 1, 2);
-	putText(image, conf, Size(0, 100), FONT_HERSHEY_COMPLEX_SMALL, 1,
-		Scalar::all(0), 1, 2);
+	std::string name;
+	std::ifstream in("../../CV-SUMMER-CAMP/data/squeezenet1.1.labels");
+
+	for (int i = 0; i < 5; i++) {
+		int count = 0;
+		in.seekg(0, ios::beg);
+		if (in.is_open())
+		{
+			while (getline(in, name))
+			{
+				if (count == classId[i])
+				{
+					break;
+				}
+				count++;
+
+			}
+		}
+		string objClass = "Class: " + std::to_string(classId[i]) + " " + name;
+		string conf = "Confidence: " + std::to_string(confidence[i]);
+		putText(image, objClass, Size(0, 20+i*40), FONT_HERSHEY_COMPLEX_SMALL, 1,
+			Scalar(71, 99, 255), 1, 2);
+		putText(image, conf, Size(0, 40+i*40), FONT_HERSHEY_COMPLEX_SMALL, 1,
+			Scalar(71, 99, 255), 1, 2);
+		
+	}
+	in.close();
 	imshow("win", image);
 	waitKey(0);
 	return 0;
