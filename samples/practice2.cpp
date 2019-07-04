@@ -41,13 +41,26 @@ int main(int argc, char** argv)
 	}
 
 	// Load image and init parameters
-	String imgName(parser.get<String>("image"));
+	string imgName(parser.get<string>("image"));
+	string model_path(parser.get<string>("model_path"));
+	string config_path(parser.get<string>("config_path"));
+	string label(parser.get<string>("label"));
+	Scalar mean(parser.get<Scalar>("mean"));
+	float heigth(parser.get<float>("heigth"));
+	float width(parser.get<float>("width"));
+	float scale(parser.get<float>("scale"));
+	bool swap(parser.get<bool>("swap"));
 
+	Mat image = imread(imgName);
+	Classificator* dnnClassificator = new DnnClassificator(model_path, config_path, label, scale, width, heigth, mean, swap);
+	Mat prob = dnnClassificator->Classify(image);
 
-	//Image classification
+	Point classIdPoint;
+	double confidence;
+	minMaxLoc(prob.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
 	
-	
-	//Show result
+	cout << "Class" << classIdPoint << "\n";
+	cout << "Confidence" << confidence << "\n";
 
 
 	return 0;
