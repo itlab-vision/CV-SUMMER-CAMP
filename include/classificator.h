@@ -23,11 +23,11 @@ class DnnClassificator :  Classificator
 	string model;
 	string config;
 	string labels;
-	double inputWidth;
-	double inputHeight;
+	int inputWidth;
+	int inputHeight;
 	Scalar mean;
 	bool swapRB;
 public:
-	DnnClassificator::DnnClassificator(string _model, string _config, string _labels, double _inputWidth,double _inputHeight, Scalar _mean, bool Swarp);
+	DnnClassificator::DnnClassificator(string _model, string _config, string _labels, int _inputWidth,int _inputHeight, Scalar _mean=(0,0,0,0), bool swapRB = false);
 	Mat Classify(Mat image);
 };

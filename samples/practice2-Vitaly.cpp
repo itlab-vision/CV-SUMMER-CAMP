@@ -42,25 +42,27 @@ int main(int argc, char** argv)
 	
 	// Load image and init parameters
 	String imgName(parser.get<String>("image"));
+	string model= parser.get<string>("model_path");
+	string config= parser.get<string>("config_path");
+	string label= parser.get<string>("label_path");
 	int width(parser.get<int>("width"));
 	int height(parser.get<int>("heigth"));
-
-
-
-
-	string model = "C:\\Users\\temp2019\\GitProject\\classification\\squeezenet\\1.1\\caffe\\squeezenet1.1.caffemodel";
-	string config = "C:\\Users\temp2019\\GitProject\\classification\squeezenet\\1.1\\caffe\\squeezenet1.1.prototxt";
-	string labels = "C:\\Users\temp2019\GitProject\classification\squeezenet\1.1\caffe\squeezenet1.1.labels";
-	Scalar sc(0, 0, 0, 0);
+	Scalar scalar = parser.get<Scalar>("mean");
+	bool swapRB = parser.get<int>("swap");
+	
 
 	Mat src = imread(imgName);
-	DnnClassificator dnnClassificator(model,config,labels,width,height,sc,false);
+	DnnClassificator dnnClassificator(model,config,label,width,height,scalar,swapRB);
 	
 	//Image classification
-	
-	src=dnnClassificator.Classify(src);
+	Point classIdPoint;
+	double confidence;
+	Mat dst =dnnClassificator.Classify(src);
+	minMaxLoc(dst, 0, &confidence, 0, &classIdPoint);
+	int classId = classIdPoint.x;
 	//Show result
 
-	waitKey();
+	cout << "Class:" << classId << endl;
+	cout << "Confidence:" << confidence << endl;
 	return 0;
 }

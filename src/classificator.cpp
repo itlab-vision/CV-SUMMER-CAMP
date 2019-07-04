@@ -1,6 +1,6 @@
 #include "classificator.h"
 
-DnnClassificator::DnnClassificator(string _model, string _config, string _labels, double _inputWidth, double _inputHeight, Scalar _mean, bool _swapRB)
+DnnClassificator::DnnClassificator(string _model, string _config, string _labels, int _inputWidth, int _inputHeight, Scalar _mean = (0, 0, 0, 0), bool _swapRB = false)
 {
 	model = _model;
 	config = _config;
@@ -26,12 +26,6 @@ DnnClassificator::DnnClassificator(string _model, string _config, string _labels
 	 blobFromImage(image, inputTensor, scale, Size(inputWidth,inputHeight), mean, swapRB, false, CV_32F);
 	 net.setInput(inputTensor);
 	 Mat prob = net.forward();
-
-	 Point classIdPoint;
-	 double confidence;
-	 minMaxLoc(prob.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
-	 int classId = classIdPoint.x;
-	 std::cout << "Class: " << classId << '\n';
-	 std::cout << "Confidence: " << confidence << '\n';
+	 prob = prob.reshape(1, 1);
 	 return prob;
 }
