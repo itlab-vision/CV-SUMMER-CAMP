@@ -14,9 +14,7 @@ ResizeFilter::ResizeFilter(int newWidth, int newHeight)
 }
 Mat ResizeFilter::ProcessImage(Mat image) 
 {
-	Size size(1, 1);
 	Mat dst;
-	//cv::resize(image, dst,size,0,0,interpolation);
-	cv::resize(image, dst, Size(), 0, 0.1, INTER_LINEAR);
+	cv::resize(image, dst, Size(width,height));
 	return dst;
 }
