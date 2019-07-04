@@ -33,7 +33,7 @@ int main(int argc, char** argv)
         parser.printErrors();
         return 0;
     }
-    
+    //
     // Load image
     String imgName(parser.get<String>("image"));
 	Mat src;
