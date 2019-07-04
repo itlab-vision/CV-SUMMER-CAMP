@@ -36,16 +36,22 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
+	int imgWidth = stoi(parser.get<String>("width"));
+	int imgHeight = stoi(parser.get<String>("height"));
 
     
     // Filter image
+	GrayFilter* grayfilter = new GrayFilter;
+	Mat image = imread(imgName);
+	image = grayfilter->ProcessImage(image);
+
+	ResizeFilter* resfilter = new ResizeFilter(imgWidth, imgHeight);
+	image = resfilter->ProcessImage(image);
 
 
     // Show image
-    
-    
-    
-    
-    
+	imshow("", image);
+	waitKey();
+     
     return 0;
 }
