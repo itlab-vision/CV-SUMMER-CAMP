@@ -45,8 +45,8 @@ int main(int argc, char** argv)
 
 
 	//Image classification
-	
-	
+
+
 	//Show result
 
 
