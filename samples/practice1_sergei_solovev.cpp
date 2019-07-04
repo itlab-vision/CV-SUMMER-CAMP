@@ -43,11 +43,12 @@ int main(int argc, char** argv)
     int height = parser.get<int>("h");
     
     // Filter image
-    GrayFilter to_gray;
-    ResizeFilter resize(width, height);
-    Mat gray_image = to_gray.ProcessImage(image);
-    Mat resized_image = resize.ProcessImage(image);
-    Mat resized_gray_image = resize.ProcessImage(gray_image);
+    Filter *to_gray = new GrayFilter();
+    Filter *resize = new ResizeFilter(width, height);
+    
+    Mat gray_image = to_gray->ProcessImage(image);
+    Mat resized_image = resize->ProcessImage(image);
+    Mat resized_gray_image = resize->ProcessImage(gray_image);
 
     // Show all images: original and modified
     namedWindow("original", WINDOW_NORMAL);
