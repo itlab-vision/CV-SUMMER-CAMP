@@ -4,6 +4,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/dnn.hpp>
+#include "detector.h"
 
 using namespace std;
 using namespace cv;
@@ -14,7 +15,8 @@ const char* cmdAbout =
     "own doing-something-cool applications.";
 
 const char* cmdOptions =
-    "{ i image        |        | image to process         }"
+	"{ i image        |        | image to process         }"
+    "{ d detector     |        | detector                 }"
     "{ h ? help usage |        | print help message       }";
 
 
@@ -30,6 +32,21 @@ int main(int argc, const char** argv) {
   }
 
   // Do something cool.
+
+  String imgName(parser.get<String>("image")); //path
+  string model(parser.get<string>("model_path"));
+  string config(parser.get<string>("config_path"));
+  string labels(parser.get<string>("label_path"));
+  cv::Mat image = cv::imread(imgName);
+
+  Detector* detect = new DnnDetector(image, model, config, labels);
+  Mat mat = detect->Detect();
+
+
+
+  cv::namedWindow("My image", cv::WINDOW_NORMAL);
+  cv::imshow("My image", image);
+  cv::waitKey(0);
   cout << "This is empty template sample." << endl;
 
   return 0;
