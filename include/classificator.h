@@ -19,7 +19,15 @@ public:
 };
 
 class DnnClassificator : public Classificator
-{
-	DnnClassificator();
+{   
+public:
+	string modelPath, configPath, labelsPath;
+	int width, height;
+	bool swapRB;
+	Scalar mean;
+	Net net;
+
+	DnnClassificator(string _modelPath, string _configPath, string _labelsPath,
+	int inputWidth, int inputHeight, Scalar _mean = (0, 0, 0, 0), bool _swapRB = false);
 	Mat Classify(Mat image);
 };
