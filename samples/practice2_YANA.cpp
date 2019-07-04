@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 	//Show result
 	Point classIdPoint;
 	double confidence;
-	minMaxLoc(prob.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
+	minMaxLoc(prob, 0, &confidence, 0, &classIdPoint);
 	int classId = classIdPoint.x;
 
 	cout << "Class: " << classId << '\n';

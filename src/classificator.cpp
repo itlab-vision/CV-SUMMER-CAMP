@@ -16,11 +16,10 @@ DnnClassificator::DnnClassificator(string _pathToModel, string _pathToConfig, st
 };
 Mat DnnClassificator::Classify(Mat frame)
 {
-	//Mat frame = imread(path_image);
 	Mat inputTensor;
-	blobFromImage(frame, inputTensor, 1, Size(inputWidth, inputHeight), mean, swapRB, false);
+	blobFromImage(frame, inputTensor, 1, Size(inputWidth, inputHeight), mean, swapRB, false, CV_32F);
 	net.setInput(inputTensor);
 	Mat prob = net.forward();
-	prob.reshape(1, 1);
+	prob = prob.reshape(1, 1);
 	return prob;
 };
