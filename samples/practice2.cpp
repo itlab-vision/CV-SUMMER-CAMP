@@ -52,7 +52,8 @@ int main(int argc, char** argv)
 
 
 	//Image classification
-	imgName = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/qwe.jpg"; //C:/CV-Intel/CV-SUMMER-CAMP-build/caffe
+
+	imgName = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/space_shuttle.jpg"; //C:/CV-Intel/CV-SUMMER-CAMP-build/caffe
 	Mat image = imread(imgName);
 	//cv::namedWindow("My image", cv::WINDOW_NORMAL);
 	//cv::imshow("My image", image);
@@ -60,10 +61,10 @@ int main(int argc, char** argv)
 	model = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/squeezenet1.1.caffemodel";
 	config = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/squeezenet1.1.prototxt";
 	label = "C:/CV-Intel/CV-SUMMER-CAMP-build/caffe/squeezenet1.1.labels";
-	double scale = 1;
-	width = 632;
-	heigth = 475;
-	mean = { 1,1,1 };
+	double scale = 0.017;
+	width = 224;
+	heigth = 224;
+	mean = { 103.94,116.78,123.68 };
 	swap = false;
 	Classificator* dnnClassificator = new DnnClassificator(model, config, label, scale, width, heigth, mean, swap);
 	Mat prob = dnnClassificator->Classify(image);
