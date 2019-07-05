@@ -3,7 +3,7 @@
 Mat GrayFilter::ProcessImage(Mat image)
 {
 	Mat dst(image.size(), CV_8UC1);
-	cvtColor(image, dst, COLOR_RGB2GRAY);
+	cvtColor(image, dst, COLOR_BGR2GRAY);
 	return dst;
 }
 
