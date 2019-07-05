@@ -23,7 +23,6 @@ Mat DnnClassificator::Classify(Mat image)
 	blobFromImage(image, inputTensor, 1, Size(inputWidth, inputHeight), mean, swapRB, false);
 	net.setInput(inputTensor);
 	Mat prob = net.forward();
-	//prob.reshape(1, 1);
 
 	return prob;
 }
