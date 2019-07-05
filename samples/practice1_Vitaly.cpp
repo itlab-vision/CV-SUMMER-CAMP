@@ -38,15 +38,15 @@ int main(int argc, char** argv)
     String imgName(parser.get<String>("image"));
 	Mat src;
 	int width(parser.get<int>("width"));
-	int hight(parser.get<int>("height"));
-	src = imread(imgName);
+	int height(parser.get<int>("height"));
+	src = imread(imgName,1);
 
     // Filter image
 	GrayFilter greyFilter;
 	Mat grey;
 	grey = greyFilter.ProcessImage(src);
 	
-	ResizeFilter resizeFilter(800,400);
+	ResizeFilter resizeFilter(width,height);
 	Mat resize;
 	resize = resizeFilter.ProcessImage(src);
     // Show image
