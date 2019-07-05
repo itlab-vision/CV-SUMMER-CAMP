@@ -48,12 +48,12 @@ int main(int argc, char** argv)
 	String configPath(parser.get<String>("config_path"));
 	String labelPath(parser.get<String>("label_path"));
 	int width = parser.get<int>("width");
-	int height = parser.get<int>("height");
+	int heigth = parser.get<int>("heigth");
 	Scalar mean = parser.get<Scalar>("mean");
 	bool swap = parser.get<bool>("swap");
 
 	//Image classification
-	Classificator* a = new DnnClassificator(modelPath, configPath, labelPath, width, height, mean, swap);
+	Classificator* a = new DnnClassificator(modelPath, configPath, labelPath, width, heigth, mean, swap);
 	Mat prob = a->Classify(image);
 
 	//Show result
