@@ -15,7 +15,7 @@ class Classificator
 {
 public:
     vector<string> classesNames;
-    virtual Mat Classify(Mat image) = 0 {}
+    virtual Mat Classify(Mat image, double scale) = 0 {}
 };
 
 
@@ -23,7 +23,7 @@ class DnnClassificator : Classificator {
 public:
 	DnnClassificator(const String& ptm, const String& ptc, uint32_t width, uint32_t height, const Scalar& mean, bool swapRB);
 
-	Mat Classify(Mat image);
+	Mat Classify(Mat image, double scale = 1.0);
 private:
 	Net net;
 

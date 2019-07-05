@@ -15,10 +15,10 @@ DnnClassificator::DnnClassificator(const String & ptm, const String & ptc, uint3
 }
 
 
-Mat DnnClassificator::Classify(Mat image) {
+Mat DnnClassificator::Classify(Mat image, double scale) {
 	Mat inputTensor;
 
-	blobFromImage(image, inputTensor, 1.0, { (int)width, (int)height }, mean, swapRB, false);
+	blobFromImage(image, inputTensor, scale, { (int)width, (int)height }, mean, swapRB, false);
 	net.setInput(inputTensor);
 
 	return net.forward().reshape(1, 1);
