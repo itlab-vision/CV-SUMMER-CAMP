@@ -17,3 +17,15 @@ class Detector
 public:
     virtual vector<DetectedObject> Detect(Mat image) = 0 {}
 };
+
+class DnnDetector : Detector
+{
+	Net net;
+	string path_to_model;
+	string path_to_confing;
+	string path_to_labels;
+
+public:
+	DnnDetector(string _path_to_model, string _path_to_confing, string _path_to_labels);
+	vector<DetectedObject> Detect(Mat image) override;
+};
