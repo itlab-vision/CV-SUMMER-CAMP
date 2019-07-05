@@ -14,6 +14,23 @@ using namespace std;
 
 class Detector
 {
+
 public:
     virtual vector<DetectedObject> Detect(Mat image) = 0 {}
+};
+
+class DnnDetector : Detector
+{
+private:
+	string model_path;
+	string config_path;
+	string labels_path;
+	int inputWidth;
+	int inputHeight;
+	bool swapRB;
+	Scalar mean;
+	Net net;
+public:
+	DnnDetector(string path_to_model, string path_to_config, string path_to_labels, int _inputWidth, int _inputHeight, bool _swapRB, Scalar _mean = (0, 0, 0, 0));
+	vector <DetectedObject> Detect(Mat image);
 };
