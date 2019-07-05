@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <numeric>
 
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
@@ -22,12 +23,31 @@ const char* cmdOptions =
 "{ mean                                 | 0 0 0 0 | vector of mean model values             }"
 "{ swap                                 | <FALSE> | swap R and B channels. TRUE|FALSE       }"
 "{ boundaries                           |         | array of area coordinates (x1 y1 x2 y2) }"
+"{ top                                  |         | output top n results                    }"
 "{ q ? help usage                       |         | print help message                      }";
 
-bool is_file_exist(const String fileName)
+bool isFileExist(const String fileName)
 {
     ifstream file(fileName);
     return file.good();
+}
+
+template <typename T>
+vector<int> sort_indexes(const vector<T>& v) {
+    vector<int> idx(v.size());
+    iota(idx.begin(), idx.end(), 0);
+
+    sort(idx.begin(), idx.end(),
+        [&v](int i1, int i2) {return v[i1] > v[i2]; });
+
+    return idx;
+}
+
+vector<int> kLargest(Mat data, int k)
+{
+    vector<int> ids = sort_indexes(vector<float>(data.begin<float>(), data.end<float>()));
+    ids.resize(k);
+    return ids;
 }
 
 int main(int argc, char** argv)
@@ -64,24 +84,25 @@ int main(int argc, char** argv)
     Scalar mean(parser.get<Scalar>("mean"));
     bool swap(parser.get<bool>("swap"));
     Scalar boundaries(parser.get<Scalar>("boundaries"));
+    int top(parser.get<int>("top"));
 
     // Check all files
-    if (!is_file_exist(imgName))
+    if (!isFileExist(imgName))
     {
         cout << "Unable to open image file";
         return -1;
     }
-    if (!is_file_exist(modelPath))
+    if (!isFileExist(modelPath))
     {
         cout << "Unable to open model file";
         return -1;
     }
-    if (!is_file_exist(configPath))
+    if (!isFileExist(configPath))
     {
         cout << "Unable to open config file";
         return -1;
     }
-    if (!is_file_exist(labelsPath))
+    if (!isFileExist(labelsPath))
     {
         cout << "Unable to open labels file";
         return -1;
@@ -91,8 +112,8 @@ int main(int argc, char** argv)
 
     // Image cropping
     if (boundaries.val[0] >= 0 && boundaries.val[1] >= 0 &&
-        img.size().width > boundaries.val[2] > boundaries.val[0] &&
-        img.size().height > boundaries.val[3] > boundaries.val[1])
+        img.size().width > boundaries.val[2] && boundaries.val[2] > boundaries.val[0] &&
+        img.size().height > boundaries.val[3] && boundaries.val[3] > boundaries.val[1])
     {
         Rect newROI(boundaries.val[0], boundaries.val[1], boundaries.val[2] - boundaries.val[0], boundaries.val[3] - boundaries.val[1]);
         img = img(newROI);
@@ -101,12 +122,26 @@ int main(int argc, char** argv)
     // Image classification
     Classificator* classificator = new DnnClassificator(modelPath, configPath, labelsPath, imgWidth, imgHeigth, mean, swap);
     Mat result = classificator->Classify(img);
-    Point classIdPoint;
-    double confidence;
-    minMaxLoc(result, 0, &confidence, 0, &classIdPoint);
 
-    // Show result
-    cout << "The image is \"" << classificator->GetLabels()[classIdPoint.x] << "\" with the confidence of " << confidence * 100 << "%.";
+    // Result
+    if (top > 1 && top < 1000)
+    {
+        result = result.reshape(1, 1);
+        vector<int> ids = kLargest(result, top);
+
+        cout << "The image is:" << endl;
+        for (int i = 0; i < top; i++)
+        {
+            cout << "-\"" << classificator->GetLabels()[ids.at(i)] << "\" with the confidence of " << result.at<float>(ids.at(i)) * 100 << "%." << endl;
+        }
+    }
+    else
+    {
+        Point classIdPoint;
+        double confidence;
+        minMaxLoc(result, 0, &confidence, 0, &classIdPoint);
+        cout << "The image is \"" << classificator->GetLabels()[classIdPoint.x] << "\" with the confidence of " << confidence * 100 << "%.";
+    }
 
     return 0;
 }
