@@ -17,3 +17,17 @@ class Detector
 public:
     virtual vector<DetectedObject> Detect(Mat image) = 0 {}
 };
+class DnnDetector : public Detector
+{
+	string modelPath;
+	string configPath;
+	string labelPath;
+	int width;
+	int height;
+	Scalar mean;
+	bool swapRB;
+	Net net;
+public:
+	DnnDetector(string _modelPath, string _configPath, string _labelPath, int _width, int _height, Scalar _mean, bool _swapRB);
+	vector<DetectedObject> Detect(Mat frame);
+};
