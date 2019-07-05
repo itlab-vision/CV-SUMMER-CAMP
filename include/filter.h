@@ -13,23 +13,23 @@ class Filter
     public:
     virtual Mat ProcessImage(Mat image) = 0 {}
 };
-class GrayFilter : Filter
+class GrayFilter : public Filter
 {
 private:
 
 public:
     Mat ProcessImage(Mat image);
-	
+
 };
 
-class ResizeFilter : Filter
+class ResizeFilter : public Filter
 {
 private:
 	int width;
 	int height;
 public:
     ResizeFilter(int newWidth, int newHeight);
-	
+
     Mat ProcessImage(Mat image);
-	
+
 };
