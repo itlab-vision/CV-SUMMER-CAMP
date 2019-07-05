@@ -44,14 +44,9 @@ vector<DetectedObject> DnnDetector::Detect(Mat image) {
 	net.setInput(inputTensor);
 	
 	tmp = net.forward().reshape(1, 1);
-	//cout << tmp << endl;
 	int rows = tmp.cols / 7;
 	int col = tmp.cols;
 	tmp = tmp.reshape(1, rows);
-
-	cout << tmp << endl;
-	double heightFactor = image.rows / 300.0;
-	double widthFactor = image.cols / 300.0;
 	DetectedObject a;
 	for (int i = 0; i < rows; i++) {
 		double score = tmp.at<float>(i, 2);
@@ -59,10 +54,10 @@ vector<DetectedObject> DnnDetector::Detect(Mat image) {
 			cout << " >0.5" << endl;
 			a.score = tmp.at<float>(i, 2);
 			a.uuid = tmp.at<float>(i, 1);
-			a.xLeftBottom = image.cols*tmp.at<float>(i, 3);// *widthFactor;
-			a.yLeftBottom = image.rows*tmp.at<float>(i, 4);// *heightFactor;
-			a.xRightTop = image.cols*tmp.at<float>(i, 5);// *widthFactor;
-			a.yRightTop = image.rows*tmp.at<float>(i, 6);// *heightFactor;
+			a.xLeftBottom = image.cols*tmp.at<float>(i, 3);
+			a.yLeftBottom = image.rows*tmp.at<float>(i, 4);
+			a.xRightTop = image.cols*tmp.at<float>(i, 5);
+			a.yRightTop = image.rows*tmp.at<float>(i, 6);
 			
 			a.classname = labels[a.uuid];
 			objects.push_back(a);
