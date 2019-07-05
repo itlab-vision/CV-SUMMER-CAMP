@@ -29,8 +29,7 @@ Mat DnnClassificator::Classify(Mat image) {
 	net.setInput(inputTensor);
 	Mat out = net.forward();
 
-
-	out=out.reshape(1, 1);
+	out = out.reshape(1, 1);
 
 	return out;
 };

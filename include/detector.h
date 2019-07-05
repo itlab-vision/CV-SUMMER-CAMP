@@ -16,4 +16,16 @@ class Detector
 {
 public:
     virtual vector<DetectedObject> Detect(Mat image) = 0 {}
+
+};
+
+class DnnDetector : public Detector {
+
+private:
+	string model;
+	string confing;
+	string labels;
+public:
+	DnnDetector(string _model, string _confing, string _labels);
+	vector<DetectedObject> Detect(Mat image);
 };
