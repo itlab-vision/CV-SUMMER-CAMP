@@ -41,15 +41,24 @@ int main(int argc, char** argv)
 	}
 	
 	// Load image and init parameters
-	String imgName(parser.get<String>("image"));
+	/*String imgName(parser.get<String>("image"));
 	string model= parser.get<string>("model_path");
 	string config= parser.get<string>("config_path");
 	string label= parser.get<string>("label_path");
 	int width(parser.get<int>("width"));
 	int height(parser.get<int>("heigth"));
 	Scalar scalar = parser.get<Scalar>("mean");
-	bool swapRB = parser.get<int>("swap");
+	bool swapRB = parser.get<int>("swap");*/
 	
+	String imgName(parser.get<String>("image"));
+	string model = parser.get<string>("model_path");
+	string config = parser.get<string>("config_path");
+	string label = parser.get<string>("label_path");
+	int width(parser.get<int>("width"));
+	int height(parser.get<int>("heigth"));
+	Scalar scalar = parser.get<Scalar>("mean");
+	bool swapRB = parser.get<int>("swap"); 
+
 
 	Mat src = imread(imgName);
 	DnnClassificator dnnClassificator(model,config,label,width,height,scalar,swapRB);

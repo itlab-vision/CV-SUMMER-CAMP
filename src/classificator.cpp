@@ -1,6 +1,6 @@
 #include "classificator.h"
 
-DnnClassificator::DnnClassificator(string _model, string _config, string _labels, int _inputWidth, int _inputHeight, Scalar _mean = (0, 0, 0, 0), bool _swapRB = false)
+DnnClassificator::DnnClassificator(string _model, string _config, string _labels, int _inputWidth, int _inputHeight, Scalar _mean, bool _swapRB)
 {
 	model = _model;
 	config = _config;
