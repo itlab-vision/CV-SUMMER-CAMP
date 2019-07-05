@@ -19,6 +19,8 @@ const char* cmdOptions =
 
 int main(int argc, char** argv)
 {
+	int a, b;
+
     // Process input arguments
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
@@ -36,15 +38,28 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
+    cv::Mat image = cv::imread("Cat.jpg");
+    
+    // Color filter image 
+	Filter* BW = new GrayFilter();
+	//Show color filter image
+	cv::namedWindow("This is my image", cv::WINDOW_NORMAL);
+	cv::imshow("This is my image", BW->ProcessImage(image));
+	cv::waitKey();
 
-    
-    // Filter image
+	//Size filter image
+	cout << "Enter new parametrs\n"<<"width:\n";
+	cin >> a;
+	cout << "height:\n";
+	cin >> b;
+	Filter* Inp = new ResizeFilter(a, b);
+	//Show size filter image
+	cv::imshow("This is my image", Inp->ProcessImage(image));
+	cv::waitKey();
 
 
-    // Show image
-    
-    
-    
+
+
     
     
     return 0;
