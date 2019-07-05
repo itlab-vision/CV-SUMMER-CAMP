@@ -29,9 +29,10 @@ private:
 	int height;
 public:
 	ResizeFilter(int newWidth, int newHeight) {
+
 		width = newWidth;
 		height = newHeight;
 	}
-    Mat ProcessImage(Mat image);
-	
+	Mat ProcessImage(Mat image);
+
 };
