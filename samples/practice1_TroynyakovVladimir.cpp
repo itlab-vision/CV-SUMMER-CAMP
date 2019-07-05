@@ -39,13 +39,13 @@ int main(int argc, char** argv)
 	Mat image = imread(imgName);
 
 	// Filter image
-	GrayFilter * filter = new GrayFilter;
+	Filter* filter = new GrayFilter();
 	image = filter->ProcessImage(image);
 	int height = stoi(parser.get<String>("height"));
 	int width = stoi(parser.get<String>("width"));
-	ResizeFilter* resfil = new ResizeFilter(width, height);
-	image = resfil->ProcessImage(image);
-
+	filter = new ResizeFilter(width, height);
+	image = filter->ProcessImage(image);
+	delete filter;
 	// Show image
 	imshow("", image);
 	waitKey();
