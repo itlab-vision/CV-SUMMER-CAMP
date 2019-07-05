@@ -23,7 +23,8 @@ int main(int argc, char** argv)
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
 
-    if (parser.has("help"))
+
+if (parser.has("help"))
     {
         parser.printMessage();
         return 0;
@@ -36,16 +37,20 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
-
-    
+	int width = parser.get<int>("width");
+	int height = parser.get<int>("height");
+	cv::Mat image = cv::imread(imgName);
+  
     // Filter image
 
+	Filter*grayimage = new GrayFilter();
+	Filter*resizeimage = new ResizeFilter(width, height);
 
     // Show image
     
-    
-    
-    
+	cv::namedWindow("My image", cv::WINDOW_NORMAL);
+	cv::imshow("My image", resizeimage->ProcessImage(image));
+	cv::waitKey();
     
     return 0;
 }
