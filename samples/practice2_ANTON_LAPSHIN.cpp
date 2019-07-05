@@ -86,25 +86,16 @@ int main(int argc, char** argv)
     }
 
     Mat img = cv::imread(imgName);
-        
-    // Load labels
-    ifstream input(labelsPath);
-    string line;
-    vector<string> labels;
-    while (getline(input, line))
-    {
-        labels.push_back(line);
-    }
 
     // Image classification
-    DnnClassificator dnnClassificator = DnnClassificator(modelPath, configPath, labelsPath, imgWidth, imgHeigth, mean, swap);
-    Mat result = dnnClassificator.Classify(img);
+    Classificator* classificator = new DnnClassificator(modelPath, configPath, labelsPath, imgWidth, imgHeigth, mean, swap);
+    Mat result = classificator->Classify(img);
     Point classIdPoint;
     double confidence;
     minMaxLoc(result, 0, &confidence, 0, &classIdPoint);
 
     // Show result
-    cout << "The image is \"" << labels[classIdPoint.x] << "\" with confidence of " << confidence * 100 << "%.";
+    cout << "The image is \"" << classificator->GetLabels()[classIdPoint.x] << "\" with the confidence of " << confidence * 100 << "%.";
 
     return 0;
 }

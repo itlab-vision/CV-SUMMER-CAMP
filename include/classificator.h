@@ -13,12 +13,16 @@ using namespace std;
 
 class Classificator
 {
-public:
+private:
     vector<string> classesNames;
-    virtual Mat Classify(Mat image) = 0 {}
+protected:
+    void SetLabels(string labelsPath);
+public:
+    virtual Mat Classify(Mat image) = 0 {};
+    vector<string> GetLabels();
 };
 
-class DnnClassificator : Classificator
+class DnnClassificator : public Classificator
 {
 private:
     String modelPath;

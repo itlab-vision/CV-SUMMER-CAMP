@@ -3,6 +3,22 @@
 
 using namespace cv;
 
+void Classificator::SetLabels(string labelsPath)
+{
+    classesNames = vector<string>();
+    ifstream input(labelsPath);
+    string line;
+    while (getline(input, line))
+    {
+        classesNames.push_back(line);
+    }
+}
+
+vector<string> Classificator::GetLabels()
+{
+    return classesNames;
+}
+
 DnnClassificator::DnnClassificator(String modelPath, String configPath, String labelsPath, int inputWidth, int inputHeight, Scalar mean, bool swapRB)
 {
     this->modelPath = modelPath;
@@ -12,6 +28,8 @@ DnnClassificator::DnnClassificator(String modelPath, String configPath, String l
     this->inputHeight = inputHeight;
     this->mean = mean;
     this->swapRB = swapRB;
+
+    SetLabels(labelsPath);
 
     net = cv::dnn::readNet(modelPath, configPath);
     net.setPreferableBackend(DNN_BACKEND_OPENCV);
