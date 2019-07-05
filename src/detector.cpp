@@ -17,7 +17,6 @@ std::string readLabel(const String& path, int number) {
 }
 
 
-
 DnnDetector::DnnDetector(const String & ptm, const String & ptc, const String& ptl) {
 	net = readNet(ptm, ptc);
 	this->ptl = ptl;
@@ -32,7 +31,7 @@ vector<DetectedObject> DnnDetector::Detect(Mat image, Size size, Scalar mean, bo
 
 	net.setInput(blobFromImage(resized.ProcessImage(image), scale, size, mean, swapRB));
 
-	Mat reshaped = net.forward().reshape(1, 100);
+	Mat reshaped = net.forward().reshape(1);
 
 	vector<DetectedObject> result;
 	for (int i = 0; i < reshaped.rows; ++i) {
@@ -42,7 +41,7 @@ vector<DetectedObject> DnnDetector::Detect(Mat image, Size size, Scalar mean, bo
 		temp.classname = readLabel(ptl, ptr[1]);
 		temp.uuid = ptr[1];
 		temp.Left = ptr[3];
-		temp.Top = ptr[6];
+ 		temp.Top = ptr[6];
 		temp.Right = ptr[5];
 		temp.Bottom = ptr[4];
 

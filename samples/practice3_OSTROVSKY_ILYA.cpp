@@ -54,8 +54,9 @@ int main(int argc, char** argv)
 	}
 
 	// Load image and init parameters
-	Mat image = imread(parser.get<String>("i"));
+	Mat image;
 
+	String imgName;// = parser.get<String>("i");
 	String ptm(parser.get<String>("model_path"));
 	String ptc(parser.get<String>("config_path"));
 	String ptl(parser.get<String>("label_path"));
@@ -65,6 +66,26 @@ int main(int argc, char** argv)
 
 	Scalar mean = parser.get<Scalar>("mean");
 	bool swapRB = parser.get<bool>("swap");
+
+	if (imgName.empty()) {
+		VideoCapture vc(0);
+		Mat temp;
+		namedWindow("camera");
+
+		while (1) {
+			vc >> temp;
+			imshow("camera", temp);
+
+			if (waitKey(1) == 32) {
+				image = temp.clone();
+				break;
+			}
+		}
+		destroyWindow("camera");
+	}
+	else {
+		image = imread(imgName);
+	}
 
 	//Image classification
 
