@@ -1,36 +1,31 @@
 #include "classificator.h"
 
-DnnClassificator::DnnClassificator(string caffemodel1, string prototxt1, string labels1, int inputWidth1, int inputHeight1, Scalar mean1, bool swapRB1,float scale1) {
-
-	caffemodel = caffemodel1;
-	prototxt = prototxt1;
-	labels = labels1;
-	inputWidth = inputWidth1;
-	inputHeight = inputHeight1;
-	mean = mean1;
-	swapRB = swapRB1;
-	scale = scale1;
-	
-	net = readNet(caffemodel1, prototxt1);
+DnnClassificator::DnnClassificator(string _model, string _config, string _labels, double _scale, float _inputWidth, float _inputHeight, Scalar _mean, bool _swapRB) {
+	model = _model;
+	config = _config;
+	labels = _labels;
+	scale = _scale;
+	inputWidth = _inputWidth;
+	inputHeight = _inputHeight;
+	mean = _mean;
+	swapRB = _swapRB;
+	net = readNet(model, config);
 	net.setPreferableBackend(0);
 	net.setPreferableTarget(0);
 
-	return;
 }
-
 Mat DnnClassificator::Classify(Mat image) {
+	Size spatial_size = Size(inputWidth, inputHeight);
 
 	Mat inputTensor;
-	Net net = readNet(caffemodel, prototxt);
-	Mat blob;
-	//scale = "123";
+	blobFromImage(image, inputTensor, scale, spatial_size, mean, swapRB, false, CV_32F);
 
-	blobFromImage(image, inputTensor, scale, Size(inputWidth, inputHeight), mean, swapRB, false);
+	//string imgName = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/data/lobachevsky.jpg";
+	//Mat image1 = imread(imgName);
+	//blobFromImage(image1, inputTensor, 1, spatial_size, { 103.94,116.78,123.68 }, false);
+
 	net.setInput(inputTensor);
-	Mat out = net.forward();
-
-
-	out=out.reshape(1, 1);
-
-	return out;
-};
+	Mat prob = net.forward();
+	return prob;
+	//return Mat();
+}
