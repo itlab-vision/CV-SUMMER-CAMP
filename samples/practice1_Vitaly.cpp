@@ -33,19 +33,25 @@ int main(int argc, char** argv)
         parser.printErrors();
         return 0;
     }
-    
+    //
     // Load image
     String imgName(parser.get<String>("image"));
+	Mat src;
+	int width(parser.get<int>("width"));
+	int hight(parser.get<int>("height"));
+	src = imread(imgName);
 
-    
     // Filter image
-
-
+	GrayFilter greyFilter;
+	Mat grey;
+	grey = greyFilter.ProcessImage(src);
+	
+	ResizeFilter resizeFilter(800,400);
+	Mat resize;
+	resize = resizeFilter.ProcessImage(src);
     // Show image
-
-    
-    
-    
-    
+	imshow("Grey", grey);
+	imshow("Resize", resize);
+	waitKey(0);
     return 0;
 }
