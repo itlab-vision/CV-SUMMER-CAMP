@@ -19,8 +19,6 @@ Mat ResizeFilter::ProcessImage(Mat image)
 {
 	//возвращать изображение нового размера
 	Mat NewSize;
-	//cvResize(image, NewSize,0);
-	//cv::resize(image, NewSize, NewSize.size(), 0, 0, INTER_LINEAR);
 	resize(image, NewSize, Size(width,height));
 	return NewSize;
 }
