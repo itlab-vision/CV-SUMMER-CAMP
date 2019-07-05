@@ -41,12 +41,12 @@ int main(int argc, char** argv)
 	Mat image = imread(imgName);
     
     //Filter image
-	GrayFilter gray_filter;
-	ResizeFilter resize_filter(width, height);
+	Filter* gray_filter = new GrayFilter();
+	Filter* resize_filter = new ResizeFilter(width, height);
 
 	Mat src = imread(imgName);
-	Mat dst1 = gray_filter.ProcessImage(image);
-	Mat dst2 = resize_filter.ProcessImage(image);
+	Mat dst1 = gray_filter->ProcessImage(image);
+	Mat dst2 = resize_filter->ProcessImage(image);
 
     // Show image
 	namedWindow("My image", WINDOW_NORMAL);
