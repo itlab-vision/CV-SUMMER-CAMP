@@ -17,3 +17,13 @@ class Detector
 public:
     virtual vector<DetectedObject> Detect(Mat image) = 0 {}
 };
+
+class DnnDetector : public Detector
+{
+private:
+	Net net;
+	int width, height;
+public:
+	DnnDetector(String pathToConfig, String pathToModel, int w, int h);
+	vector<DetectedObject> Detect(Mat image) override;
+};
