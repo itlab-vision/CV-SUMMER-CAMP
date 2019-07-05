@@ -1,0 +1,1 @@
+cmake -DOpenCV_DIR="C:\OpenCV41\opencv\build" -G "Visual Studio 14 2015 Win64" "..\CV-SUMMER-CAMP"
