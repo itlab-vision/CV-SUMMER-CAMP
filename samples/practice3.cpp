@@ -16,7 +16,9 @@ const char* cmdAbout =
 
 const char* cmdOptions =
 	"{ i image        |        | image to process         }"
-    "{ d detector     |        | detector                 }"
+    "{ model_path     |        |                  }"
+    "{ config_path    |        |                  }"
+    "{ label_path     |        |                  }"
     "{ h ? help usage |        | print help message       }";
 
 
@@ -37,12 +39,24 @@ int main(int argc, const char** argv) {
   string model(parser.get<string>("model_path"));
   string config(parser.get<string>("config_path"));
   string labels(parser.get<string>("label_path"));
-  cv::Mat image = cv::imread(imgName);
 
-  Detector* detect = new DnnDetector(image, model, config, labels);
-  Mat mat = detect->Detect();
+  model = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel";
+  config = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.prototxt";
+  labels = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.prototxt";
+  imgName = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/data/qwe.jpg";
 
+  Mat image = cv::imread(imgName);
 
+  Detector* detect = new DnnDetector( model, config, labels);
+  vector<DetectedObject> mat = detect->Detect(image);
+
+  Point classIdPoint;
+  double confidence;
+
+  for (int i = 0; i < mat.size(); i++) {
+	  cv::rectangle(image, Point(mat[i].Left,mat[i].Top), Point(mat[i].Right, mat[i].Bottom), (255, 255, 255),3);
+  }
+  
 
   cv::namedWindow("My image", cv::WINDOW_NORMAL);
   cv::imshow("My image", image);

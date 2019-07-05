@@ -15,16 +15,16 @@ using namespace std;
 class Detector
 {
 public:
-    virtual vector<DetectedObject> Detect(Mat image) = 0 {}
+	virtual vector<DetectedObject> Detect(Mat image) = 0 {}
+	
 };
 class DnnDetector : public Detector {
 private:
-	Mat image;
 	string model;
 	string config;
 	string labels;
 
 public:
-	DnnDetector(Mat _image, string _model, string _config, string _labels);
-	Mat Detect();
+	DnnDetector(string _model, string _config, string _labels);
+	vector<DetectedObject> Detect(Mat _image);
 };

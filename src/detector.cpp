@@ -9,20 +9,42 @@
 //		 rgb : false
 //		 classes : "object_detection_classes_pascal_voc.txt"
 //		 sample : "object_detection"
-DnnDetector::DnnDetector(Mat _image, string _model, string _config, string _labels) {
-	image =_image;
+
+//
+//int Left;
+//int Right;
+//int Top;
+//int Bottom;
+//int uuid;
+//std::string classname;
+
+//[image_number, classid, score, left, bottom, right, top],
+
+DnnDetector::DnnDetector(string _model, string _config, string _labels) {
 	model = _model;
 	config =_config;
 	labels =_labels;
 }
-Mat DnnDetector::Detect() {
+vector<DetectedObject> DnnDetector::Detect(Mat _mat) {
+	Mat image = _mat;
 	Net net = readNet(model, config);
 	net.setPreferableBackend(0);
 	net.setPreferableTarget(0);
 
 	Mat inputTensor;
-	blobFromImage(image, inputTensor, 0.007843, Size(300, 300), { 127.5, 127.5, 127.5 }, false, false, CV_32F);
+	blobFromImage(image, inputTensor, 0.007843, Size(300, 300), { 127.5, 127.5, 127.5 }, false, false);
 	net.setInput(inputTensor);
-	Mat prob = net.forward();
-	return prob;
+	Mat prob = net.forward(); 
+	prob = prob.reshape(1,1);
+	prob = prob.reshape(1, prob.cols / 7);
+	vector<DetectedObject> res;
+	for (int i = 0; i < prob.rows; i++) {
+		DetectedObject obj;
+		obj.Left = prob.at<float>(i, 3)*image.cols;
+		obj.Right = prob.at<float>(i, 5)*image.cols;
+		obj.Top = prob.at<float>(i, 6)*image.rows;
+		obj.Bottom = prob.at<float>(i, 4)*image.rows;
+		res.push_back(obj);
+	}
+	return res;
 }
