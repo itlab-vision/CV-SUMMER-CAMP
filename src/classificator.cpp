@@ -1,33 +1,26 @@
 #include "classificator.h"
-DnnClassificator::DnnClassificator(string Tomodel1, string Toconfig1, string Tolabels1, double scale1, float inputWidth1, float  inputHeight1, Scalar mean1, bool swapRB1) {
-	
-	Tomodel = Tomodel1;
-	Toconfig = Toconfig1;
-	Tolabels = Tolabels1;
-	inputWidth = inputWidth1;
-	inputHeight = inputHeight1;
-	scale = scale1;
-	mean = mean1;
-	swapRB = swapRB1;
-	
 
-	Net net = readNet(Tomodel, Toconfig);
-	net.setPreferableBackend(0);
-	net.setPreferableTarget(0);
-
+DnnClassificator::DnnClassificator(string modelPath_, string configPath_, string labelsPath_, int inputWidth_, int inputHeight_, Scalar mean_, bool swapRB_) {
+	modelPath = modelPath_;
+	configPath = configPath_;
+	labelsPath = labelsPath_;
+	width = inputWidth_;
+	height = inputHeight_;
+	mean = mean_;
+	swapRB = swapRB_;
+	int backendId = DNN_BACKEND_OPENCV;
+	int targetId = DNN_TARGET_CPU;
+	net = readNet(modelPath, configPath);
+	net.setPreferableBackend(backendId);
+	net.setPreferableTarget(targetId);
 }
 
 Mat DnnClassificator::Classify(Mat image) {
 	Mat inputTensor;
-	Net net = readNet(Tomodel, Toconfig);
-	Mat blob;
-
-
-	blobFromImage(image, inputTensor, scale, Size(inputWidth, inputHeight), mean, swapRB, false);
-	net.setInput(blob);
+	int scale = 1, ddepth = CV_32F;
+	blobFromImage(image, inputTensor, scale, Size(width, height), mean, swapRB, false, ddepth);
+	net.setInput(inputTensor);
 	Mat prob = net.forward();
-	prob.reshape(1, 1);
+	prob = prob.reshape(1, 1);
 	return prob;
-	
-
- }
+}
