@@ -3,6 +3,7 @@
 
 struct DetectedObject
 {
+	int Score;
     int Left;
     int Right;
     int Top;

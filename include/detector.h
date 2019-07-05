@@ -21,11 +21,17 @@ public:
 class DnnDetector : Detector
 {
 	Net net;
+	vector<string> Labels;
 	string path_to_model;
 	string path_to_confing;
 	string path_to_labels;
+	int inputWidth;
+	int inputHeight;
+	Scalar mean;
+	bool swapRB;
 
 public:
-	DnnDetector(string _path_to_model, string _path_to_confing, string _path_to_labels);
+	DnnDetector(string _path_to_model, string _path_to_confing, string _path_to_labels,
+		int _inputWidth, int _inputHeight, Scalar _mean, bool _swapRB);
 	vector<DetectedObject> Detect(Mat image) override;
 };
