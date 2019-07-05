@@ -36,12 +36,12 @@ int main(int argc, char** argv)
 
 	// Load image
 	String imgName(parser.get<String>("image"));
-	int imgWidth = stoi(parser.get<String>("width"));
-	int imgHeight = stoi(parser.get<String>("height"));
+	int imgWidth = parser.get("width");
+	int imgHeight = parser.get("height");
 	Mat image = imread(imgName);
 
 	// Filter image
-	GrayFilter* gf = new GrayFilter;
+	GrayFilter* gf = new GrayFilter();
 	ResizeFilter* rf = new ResizeFilter(imgWidth, imgHeight);
 	Mat dst = gf->ProcessImage(image);
 	Mat dst2 = rf->ProcessImage(dst);
