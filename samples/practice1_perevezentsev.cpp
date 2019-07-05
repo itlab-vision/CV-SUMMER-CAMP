@@ -41,17 +41,19 @@ int main(int argc, char** argv)
 
     
     // Filter image
-	GrayFilter* grayfilter = new GrayFilter;
+	Filter* filter = new GrayFilter();
 	Mat image = imread(imgName);
-	image = grayfilter->ProcessImage(image);
+	image = filter->ProcessImage(image);
 
-	ResizeFilter* resfilter = new ResizeFilter(imgWidth, imgHeight);
-	image = resfilter->ProcessImage(image);
+	filter = new ResizeFilter(imgWidth, imgHeight);
+	image = filter->ProcessImage(image);
 
 
     // Show image
 	imshow("", image);
 	waitKey();
-     
+    
+	delete filter;
+
     return 0;
 }
