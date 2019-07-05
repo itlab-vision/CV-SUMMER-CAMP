@@ -31,5 +31,5 @@ public:
     ResizeFilter(int newWidth, int newHeight);
 	
     Mat ProcessImage(Mat image);
-	
+	 
 };

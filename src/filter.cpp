@@ -11,7 +11,7 @@ Mat GrayFilter::ProcessImage(Mat src)
 ResizeFilter::ResizeFilter(int newWidth, int newHeignt)
 {
 	/*w & h - privat parameters in ResizeFilter class*/
-	width = newWidth;
+	width = newWidth; 
 	height = newHeignt;
 }
 
