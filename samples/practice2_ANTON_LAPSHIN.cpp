@@ -13,15 +13,16 @@ using namespace std;
 const char* cmdAbout = "Sample of OpenCV usage. ";
 
 const char* cmdOptions =
-"{ i  image                             |         | image to process                  }"
-"{ w  width                             |         | image width for classification    }"
-"{ h  heigth                            |         | image heigth for classification   }"
-"{ model_path                           |         | path to model                     }"
-"{ config_path                          |         | path to model configuration       }"
-"{ label_path                           |         | path to class labels              }"
-"{ mean                                 | 0 0 0 0 | vector of mean model values       }"
-"{ swap                                 | <FALSE> | swap R and B channels. TRUE|FALSE }"
-"{ q ? help usage                       |         | print help message                }";
+"{ i  image                             |         | image to process                        }"
+"{ w  width                             |         | image width for classification          }"
+"{ h  heigth                            |         | image heigth for classification         }"
+"{ model_path                           |         | path to model                           }"
+"{ config_path                          |         | path to model configuration             }"
+"{ label_path                           |         | path to class labels                    }"
+"{ mean                                 | 0 0 0 0 | vector of mean model values             }"
+"{ swap                                 | <FALSE> | swap R and B channels. TRUE|FALSE       }"
+"{ boundaries                           |         | array of area coordinates (x1 y1 x2 y2) }"
+"{ q ? help usage                       |         | print help message                      }";
 
 bool is_file_exist(const String fileName)
 {
@@ -62,6 +63,7 @@ int main(int argc, char** argv)
     String labelsPath(parser.get<String>("label_path"));
     Scalar mean(parser.get<Scalar>("mean"));
     bool swap(parser.get<bool>("swap"));
+    Scalar boundaries(parser.get<Scalar>("boundaries"));
 
     // Check all files
     if (!is_file_exist(imgName))
@@ -86,6 +88,15 @@ int main(int argc, char** argv)
     }
 
     Mat img = cv::imread(imgName);
+
+    // Image cropping
+    if (boundaries.val[0] >= 0 && boundaries.val[1] >= 0 &&
+        img.size().width > boundaries.val[2] > boundaries.val[0] &&
+        img.size().height > boundaries.val[3] > boundaries.val[1])
+    {
+        Rect newROI(boundaries.val[0], boundaries.val[1], boundaries.val[2] - boundaries.val[0], boundaries.val[3] - boundaries.val[1]);
+        img = img(newROI);
+    }
 
     // Image classification
     Classificator* classificator = new DnnClassificator(modelPath, configPath, labelsPath, imgWidth, imgHeigth, mean, swap);
