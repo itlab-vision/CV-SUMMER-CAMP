@@ -14,6 +14,27 @@ using namespace std;
 class Classificator
 {
 public:
-    vector<string> classesNames;
-    virtual Mat Classify(Mat image) = 0 {}
+	vector<string> classesNames;
+	virtual Mat Classify(Mat image) = 0 {}
+};
+
+class DnnClassificator :Classificator
+{
+private:
+	String path_to_model;
+	String path_to_config;
+	String path_to_lables;
+	Size spatial_size;
+	Scalar mean;
+	bool swapRB;
+	Net net;
+public:
+	DnnClassificator(String path_to_model,
+		String path_to_config,
+		String path_to_lables,
+		int width,
+		int height,
+		Scalar mean,
+		bool swapRB);
+	Mat Classify(Mat image);
 };
