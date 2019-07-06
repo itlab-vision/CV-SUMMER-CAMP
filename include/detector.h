@@ -23,6 +23,10 @@ private:
 	string model;
 	string config;
 	string labels;
+	string label[21] = { "background", "aeroplane", "bicycle", "bird",
+	  "boat","bottle", "bus",  "car", "cat", "chair", "cow",
+	  "diningtable",  "dog", "horse", "motorbike", "person",
+	  "pottedplant", "sheep",  "sofa", "train", "tvmonitor" };
 
 public:
 	DnnDetector(string _model, string _config, string _labels);

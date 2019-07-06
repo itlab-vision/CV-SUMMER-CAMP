@@ -36,6 +36,7 @@ vector<DetectedObject> DnnDetector::Detect(Mat _mat) {
 	net.setInput(inputTensor);
 	Mat prob = net.forward(); 
 	prob = prob.reshape(1,1);
+	//for (int i = 0; i < prob.cols; i++) std::cout << to_string(prob.at<int>(0,i))<< " / ";
 	prob = prob.reshape(1, prob.cols / 7);
 	vector<DetectedObject> res;
 	for (int i = 0; i < prob.rows; i++) {
@@ -44,6 +45,8 @@ vector<DetectedObject> DnnDetector::Detect(Mat _mat) {
 		obj.Right = prob.at<float>(i, 5)*image.cols;
 		obj.Top = prob.at<float>(i, 6)*image.rows;
 		obj.Bottom = prob.at<float>(i, 4)*image.rows;
+		obj.classid = (int)round(prob.at<float>(i, 1));
+		obj.confidence = prob.at<float>(i, 2);
 		res.push_back(obj);
 	}
 	return res;
