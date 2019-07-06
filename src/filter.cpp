@@ -60,3 +60,28 @@ Mat GaussFilter::ProcessImage(Mat image)
 		return image;
 	}
 }
+
+void WebCamVideo::getVideo(Filter * filter)
+{
+	Mat frame;
+	VideoCapture cap(0);
+	while (true)
+	{
+		cap >> frame;
+		frame=filter->ProcessImage(frame);
+		imshow("webcam", frame);
+		if (waitKey(30) >= 0) break;
+	}
+}
+
+void WebCamVideo::getVideo()
+{
+	Mat frame;
+	VideoCapture cap(0);
+	while (true)
+	{
+		cap >> frame;
+		imshow("webcam", frame);
+		if (waitKey(30) >= 0) break;
+	}
+}

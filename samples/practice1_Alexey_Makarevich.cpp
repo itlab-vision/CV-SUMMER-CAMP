@@ -19,7 +19,7 @@ const char* cmdOptions =
 
 int main(int argc, char** argv)
 {
-	// Process input arguments
+	//Process input arguments
 	CommandLineParser parser(argc, argv, cmdOptions);
 	parser.about(cmdAbout);
 
@@ -34,30 +34,33 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	// Load image
 	String imgName(parser.get<String>("image"));
+	int width = parser.get<int>("width");
+	int height = parser.get<int>("height");
+
+
+
 	Mat Img = imread(imgName);
-	
-
-	// Filter image
-	string widthS= parser.get<String>("width");
-	int width = stoi(widthS);
-	string heightS = parser.get<String>("height");
-	int height = stoi(heightS);
-	ResizeFilter resizeF(width, height);
-	Mat resizedImg = resizeF.ProcessImage(Img);
-	Mat grayImg = GrayFilter::ProcessImage(Img);
-	//Mat GaussImg = GaussFilter::ProcessImage(Img); ne rabotaet T_T
-
-	// Show image
 	imshow("Orig", Img);
-	//imshow("Gauss", GaussImg);
-	imshow("Gray", grayImg);
-	imshow("Resized",resizedImg);
+	
+	Filter* gray = new GrayFilter();
+	Mat grayImg = gray->ProcessImage(Img);
+	imshow("GrayImage", grayImg);
+
+	Filter* resize = new ResizeFilter(width, height);
+	Mat resizedImg = resize->ProcessImage(Img);
+	imshow("resizedImage", resizedImg);
+
+	Filter* gauss = new GaussFilter();
+	Mat gaussImg = gauss->ProcessImage(Img);
+	imshow("gauss filter", gaussImg);
+
+	WebCamVideo video;
+	video.getVideo(gray);
+
+	
 	waitKey();
-
-
-
+	
 
 	return 0;
 }
