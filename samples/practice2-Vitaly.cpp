@@ -37,18 +37,32 @@ int main(int argc, char** argv)
 	if (!parser.check())
 	{
 		parser.printErrors();
-		return 0;
+		return -1;
 	}
 
 	// Load image and init parameters
 	String imgName(parser.get<String>("image"));
+	int width(parser.get<int>("width"));
+	int height(parser.get<int>("heigth"));
+	string model (parser.get<string>("model_path"));
+	string config( parser.get<string>("config_path"));
+	string label ( parser.get<string>("label_path"));
+	Scalar scalar (parser.get<Scalar>("mean"));
+	bool swapRB (parser.get<int>("swap"));
 
+	Mat src = imread(imgName);
+	DnnClassificator dnnClassificator(model, config, label, width, height, scalar, swapRB);
 
 	//Image classification
-	
-	
+	Point classIdPoint;
+	double confidence;
+	Mat dst = dnnClassificator.Classify(src);
+	minMaxLoc(dst.reshape(1,1), 0, &confidence, 0, &classIdPoint);
+	int classId = classIdPoint.x;
 	//Show result
 
-
+	cout << "Class:" << classId << endl;
+	cout << "Confidence:" << confidence << endl;
 	return 0;
+	
 }
