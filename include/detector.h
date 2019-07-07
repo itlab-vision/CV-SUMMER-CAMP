@@ -26,9 +26,17 @@ class DnnDetector : public Detector
 	int inputWidth;
 	int inputHeight;
 	Scalar mean;
+	double scale;
 	bool swapRB;
 public:
-	DnnDetector(string _model, string _config, string _labels, int _inputWidth, int _inputHeight, Scalar _mean = (0, 0, 0, 0), bool swapRB = false);
+	DnnDetector(string _model, 
+				string _config, 
+				string _labels,
+				int _inputWidth, 
+				int _inputHeight, 
+				Scalar _mean,
+				double _scale,
+				bool _swapRB);
 	vector <DetectedObject> Detect(Mat image);
 
 };

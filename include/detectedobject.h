@@ -9,4 +9,5 @@ struct DetectedObject
     int Bottom;
     int uuid;
     std::string classname;
+	double confidence;
 };
