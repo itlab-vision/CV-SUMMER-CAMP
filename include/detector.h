@@ -14,6 +14,29 @@ using namespace std;
 
 class Detector
 {
+private:
+    vector<string> classesNames;
+protected:
+    void SetLabels(string labelsPath);
 public:
-    virtual vector<DetectedObject> Detect(Mat image) = 0 {}
+    virtual vector<DetectedObject> Detect(Mat image) = 0 {};
+    vector<string> GetLabels();
+};
+
+class DnnDetector : public Detector
+{
+private:
+    String modelPath;
+    String configPath;
+    String labelsPath;
+    float scale;
+    int inputWidth;
+    int inputHeight;
+    Scalar mean;
+    bool swapRB;
+    Net net;
+    float scoreThreshold;
+public:
+    DnnDetector(String modelPath, String configPath, String labelsPath, float scale, int inputWidth, int inputHeight, Scalar mean = (0, 0, 0, 0), bool swapRB = false, float scoreThreshold = 0.75);
+    vector<DetectedObject> Detect(Mat image);
 };
