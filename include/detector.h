@@ -24,7 +24,7 @@ class DnnDetector :public Detector
 	String path_to_config;
 	String path_to_lables;
 	Size spatial_size=Size(300,300);
-	double scale = 0.007843;
+	double scale = 0.00784;
 	Scalar mean=Scalar(127.5, 127.5, 127.5);
 	bool swapRB=false;
 	Net net;
