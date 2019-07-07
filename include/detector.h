@@ -7,6 +7,8 @@
 #include <opencv2/highgui.hpp>
 
 #include "detectedobject.h"
+#include "label_parser.h"
+
 
 using namespace cv;
 using namespace cv::dnn;

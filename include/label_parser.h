@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <fstream>
-#include <iostream>
+#include <map>
 
-
-int getClassNumber(std::string pathToLabels);
+std::map<int, std::string> initializeClasses(std::string pathToLabels);
