@@ -42,13 +42,34 @@ int main(int argc, char** argv)
 
 	// Load image and init parameters
 	String imgName(parser.get<String>("image"));
+	int inputWidth = parser.get<int>("width");
+	int inputHeight = parser.get<int>("height");
+	String caffemodel(parser.get<String>("model_path"));
+	String prototxt(parser.get<String>("config_path"));
+	String labels(parser.get<String>("label_path"));
+	Scalar mean = parser.get<Scalar>("maen");
+	bool swapRB = parser.get<bool>("swap");
+
+
 
 
 	//Image classification
+	Classificator* classificator = new DnnClassificator(caffemodel, prototxt, labels, inputWidth, inputHeight, mean, swapRB);
+	Mat image = imread(imgName);
+	Mat output = classificator->Classify(image);
 	
+	Point classIdPoint;
+	double confidence;
+	minMaxLoc(output, 0, &confidence, &classIdPoint);
+	int classId = classIdPoint.x;
+
 	
 	//Show result
+	cout << "Class:" << classId << '\n';
+	cout << "Confidence:" << confidence << '\n';
 
+	delete classificator;
+	
 
 	return 0;
 }
