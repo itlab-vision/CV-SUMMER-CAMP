@@ -15,5 +15,27 @@ class Classificator
 {
 public:
     vector<string> classesNames;
-    virtual Mat Classify(Mat image) = 0 {}
+    virtual Mat Classify(Mat image) = 0;
 };
+
+class DnnClassificator : public Classificator
+{
+private:
+    string pathToModel;
+    string pathToConfig;
+    string pathToLabels;
+    int imgWidth;
+    int imgHeight;
+    Scalar mean;
+    bool swapRB;
+    Net net;
+    
+public:
+    DnnClassificator(string pathToModel, string pathToConfig, string pathToLabels,
+                     int imgWidth, int imgHeight, Scalar mean, int swapRB);
+    
+    Mat Classify(Mat image);
+    String DecodeLabel(int n);
+    
+};
+
