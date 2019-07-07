@@ -124,7 +124,7 @@ int main(int argc, char** argv)
     Mat result = classificator->Classify(img);
 
     // Result
-    if (top > 1 && top < 1000)
+    if (top >= 0)
     {
         result = result.reshape(1, 1);
         vector<int> ids = kLargest(result, top);
