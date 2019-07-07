@@ -15,6 +15,7 @@ const char* cmdOptions =
 "{ q ? help usage   | <none> | print help message      }";
 
 bool grabFrame(cv::Mat &frame, cv::VideoCapture &cap);
+bool process(Filter **filter, const cv::Mat &src, cv::Mat &dst);
 void show(const std::string &winname, const cv::Mat &frame);
 
 int main(int argc, char** argv)
@@ -34,7 +35,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	// Parser
+	// Parser command line
 	cv::String filepath(parser.get<cv::String>("image"));
 	int width = parser.get<int>("width");
 	int height = parser.get<int>("height");
@@ -42,6 +43,8 @@ int main(int argc, char** argv)
 
 	cv::Mat frame;
 	cv::VideoCapture cap;
+
+	// Open image, video or default camera
 	frame = cv::imread(filepath, cv::IMREAD_COLOR);
 	if (frame.empty())
 	{
@@ -57,41 +60,55 @@ int main(int argc, char** argv)
 	std::int8_t pause = 1;
 	std::uint8_t key = NULL;
 
+	Filter *filter = nullptr;
+
+	std::cout << "Press space to pause" << std::endl;
+	std::cout << "Press Esc to exit" << std::endl;
 	while (true)
 	{
 		if (!grabFrame(frame, cap))	break;
-
+		
 		// Filter image
-
+		
 		// Gray
 		cv::Mat gray;
-		GrayFilter gf;
-		gf.ProcessImage(frame, gray);
+		if (!filter)
+		{
+			filter = new GrayFilter();
+			process(&filter, frame, gray);
+		}
 
 		// Resize
 		cv::Mat newSizeImage;
-		ResizeFilter rf(width, height);
-		rf.ProcessImage(frame, newSizeImage);
+		if (!filter)
+		{
+			filter = new ResizeFilter(width, height);
+			process(&filter, frame, newSizeImage);
+		}
 
 		// Gaussian
 		cv::Mat gaussian;
-		GaussianFilter gausF(cv::Size(11, 11));
-		gausF.ProcessImage(frame, gaussian);
+		if (!filter)
+		{
+			filter = new GaussianFilter(cv::Size(5, 5));
+			process(&filter, frame, gaussian);
+		}
+
+		// Barley-Break
+		cv::Mat barleyBreak;
+		if (!filter)
+		{
+			filter = new FilterBarleyBreak(11);
+			process(&filter, frame, barleyBreak);
+		}
 
 
 		// Show image
-
-		// Original
 		show("Original", frame);
-
-		// Gray
 		show("Gray", gray);
-
-		// Resize
 		show("Resize", newSizeImage);
-
-		// Gaussian
 		show("Gaussian", gaussian);
+		show("Barley-Break", barleyBreak);
 
 		key = cv::waitKey(pause);
 		if (key == ' ')	pause *= -1;
@@ -105,6 +122,7 @@ int main(int argc, char** argv)
 
 
 
+// Return image or grab frame from video or frame from default camera
 bool grabFrame(cv::Mat &frame, cv::VideoCapture &cap)
 {
 	if (cap.isOpened())
@@ -121,9 +139,28 @@ bool grabFrame(cv::Mat &frame, cv::VideoCapture &cap)
 }
 
 
+// Filter
+bool process(Filter **filter, const cv::Mat &src, cv::Mat &dst)
+{
+	if (!(*filter))	return false;
+
+	(*filter)->ProcessImage(src, dst);
+
+	if ((*filter))
+	{
+		delete (*filter);
+		(*filter) = nullptr;
+	}
+
+	return true;
+}
+
+
 
 void show(const std::string &winname, const cv::Mat &frame)
 {
+	if (frame.empty() || winname.empty())	return;
+
 	cv::namedWindow(winname, cv::WINDOW_AUTOSIZE);
 	cv::imshow(winname, frame);
 	//cv::waitKey();

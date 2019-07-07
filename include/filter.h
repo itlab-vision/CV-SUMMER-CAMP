@@ -14,10 +14,8 @@ public:
 
 
 
-class GrayFilter : Filter
+class GrayFilter : public Filter
 {
-private:
-
 public:
 	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
 
@@ -25,27 +23,43 @@ public:
 
 
 
-class ResizeFilter : Filter
+class ResizeFilter : public Filter
 {
-private:
-	int m_width;
-	int m_height;
 public:
 	ResizeFilter(int width, int height);
 
 	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
 
+private:
+	int m_width;
+	int m_height;
+
 };
 
 
 
-class GaussianFilter
+class GaussianFilter : public Filter
 {
-private:
-	cv::Size m_kernel;
 public:
 	GaussianFilter(const cv::Size &kernel);
 
 	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
+
+private:
+	cv::Size m_kernel;
+
+};
+
+
+
+class FilterBarleyBreak : public Filter
+{
+public:
+	FilterBarleyBreak(const std::uint32_t &scale);
+
+	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
+
+private:
+	std::uint32_t m_scale;
 
 };
