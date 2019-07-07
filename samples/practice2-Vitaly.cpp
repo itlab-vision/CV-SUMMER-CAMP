@@ -60,8 +60,19 @@ int main(int argc, char** argv)
 	minMaxLoc(dst.reshape(1,1), 0, &confidence, 0, &classIdPoint);
 	int classId = classIdPoint.x;
 	//Show result
-
-	cout << "Class:" << classId << endl;
+	ifstream file(label);
+	string str;
+	int n = 0;
+	while (!file.eof()) 
+	{
+		getline(file, str);
+		if (n == classId) {
+			break;
+		}
+		n++;
+	}
+	file.close();
+	cout << "Class:" << classId+1<<"  "<<str << endl;
 	cout << "Confidence:" << confidence << endl;
 	return 0;
 	
