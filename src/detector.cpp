@@ -26,7 +26,6 @@ vector <DetectedObject> DnnDetector::Detect(Mat image)
 	net.setInput(inputTensor);
 	prob = net.forward();
 	prob = prob.reshape(1, 1);
-	return prob;
 	prob = prob.reshape(1, prob.cols / 7);
 	vector<DetectedObject> res;
 	for (int i = 0; i < prob.rows; i++) {
@@ -39,4 +38,5 @@ vector <DetectedObject> DnnDetector::Detect(Mat image)
 		obj.Top = prob.at<float>(i, 6)*image.rows;
 		res.push_back(obj);
 	}
+	return res;
 }
