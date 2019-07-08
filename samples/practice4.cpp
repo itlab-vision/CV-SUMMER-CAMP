@@ -68,7 +68,7 @@ public:
         net_mean(net_mean),
         net_swapRB(net_swapRB)
     {
-        net = dnn::readNetFromCaffe(net_caffe_model_path, net_caffe_weights_path);
+        net = dnn::readNet(net_caffe_model_path, net_caffe_weights_path);
         if (net.empty())
             CV_Error(Error::StsError, "Cannot read Caffe net");
     }
