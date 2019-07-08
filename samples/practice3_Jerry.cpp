@@ -5,9 +5,13 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/dnn.hpp>
 
+#include "detector.h"
+
 using namespace std;
 using namespace cv;
 using namespace cv::dnn;
+
+//bool debug = true;
 
 const char* cmdAbout =
     "This is an empty application that can be treated as a template for your "
@@ -29,8 +33,30 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  // Do something cool.
-  cout << "This is empty template sample." << endl;
+  String imgName(parser.get<String>("image"));
+
+  // Do something cool. 
+  Mat image = imread(imgName);
+
+  DnnDetector detector;
+  detector.Detect(image);
+
+  /*Mat result = detector.Detect(image);
+
+  Point classIdPoint;
+  double probability;
+  minMaxLoc(result.reshape(1, 1), 0, &probability, 0, &classIdPoint);
+  int classId = classIdPoint.x;*/
+
+  // для нескольких точек надо работать с MatchTemplate ?
+
+
+
+
+ /* if (debug)
+	  cout << "matrix: " << result.reshape(1, 1) << endl;
+
+  cout << "probability: " << probability << ", class: " << classId << endl;*/
 
   system("pause");
 

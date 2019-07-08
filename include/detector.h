@@ -7,6 +7,7 @@
 #include <opencv2/highgui.hpp>
 
 #include "detectedobject.h"
+#include <vector>
 
 using namespace cv;
 using namespace cv::dnn;
@@ -21,7 +22,7 @@ public:
 class DnnDetector: public Detector
 {
 public:
-	DnnDetector(String path_to_model, String path_to_config, String path_to_labels, int inputWidth, int inputHeight, Scalar mean = (0, 0, 0, 0), bool swapRB = false);
+	DnnDetector();
 	vector<DetectedObject> Detect(Mat image);
 	~DnnDetector() {};
 
