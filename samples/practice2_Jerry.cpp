@@ -12,6 +12,7 @@ using namespace std;
 
 const char* cmdAbout = "Sample of OpenCV usage. ";
 
+
 const char* cmdOptions =
 "{ i  image                             | <none> | image to process                  }"
 "{ w  width                             |        | image width for classification    }"
@@ -75,7 +76,12 @@ int main(int argc, char** argv)
 
 	//Show result
 
-	cout << "rows: " << image.rows<< ", columns: " << image.cols << ", probability: " << probability << ", class: " << classId << endl;
+	bool debug = true;
+
+	if (debug)
+		cout << "matrix: " << result.reshape(1, 1) << endl << "rows: " << image.rows << ", columns: " << image.cols;
+
+	 cout << "probability: " << probability << ", class: " << classId << endl;
 
 	system("pause");
 
