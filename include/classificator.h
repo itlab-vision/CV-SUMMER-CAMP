@@ -34,4 +34,5 @@ private:
 	int inputHeight;
 	Scalar mean;
 	bool swapRB;
+	Net net;
 };
