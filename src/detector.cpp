@@ -17,7 +17,7 @@ DnnDetector::DnnDetector(string _modelPath, string _configPath, string _labelPat
 vector<DetectedObject> DnnDetector::Detect(Mat frame)
 {
 	Mat inputTensor;
-	blobFromImage(frame, inputTensor, scale, Size(width, height), mean, swapRB, false);
+	blobFromImage(frame, inputTensor, scale, Size(width, height), mean, swapRB, false, CV_32F);
 	net.setInput(inputTensor);
 	Mat prob = net.forward();
 	prob = prob.reshape(1, 1);
@@ -35,5 +35,6 @@ vector<DetectedObject> DnnDetector::Detect(Mat frame)
 		tmp.Right = prob.at<float>(i, 5) * cols;
 		tmp.Top = prob.at<float>(i, 6) * rows;
 		objects.push_back(tmp);
-	return objects;
+		return objects;
+	}
 };

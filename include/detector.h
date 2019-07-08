@@ -30,5 +30,5 @@ class DnnDetector : public Detector
 	Net net;
 public:
 	DnnDetector(string _modelPath, string _configPath, string _labelPath, int _width, int _height, double _scale, Scalar _mean, bool _swapRB);
-	vector<DetectedObject> Detect(Mat frame);
-};
+	vector<DetectedObject> Detect (Mat frame);
+}; 
