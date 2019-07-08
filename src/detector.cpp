@@ -55,7 +55,7 @@ vector <DetectedObject> DnnDetector::Detect(Mat image)
 			if (token.uuid > labels.size())
 				token.classname = "undef";
 			else
-				token.classname = labels[token.uuid-1];
+				token.classname = labels[token.uuid];
 			retObjs.push_back(token);
 		}
 	}

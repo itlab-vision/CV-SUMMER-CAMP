@@ -46,9 +46,8 @@ int main(int argc, const char** argv) {
 	int height(parser.get<int>("h"));
 
 	Mat image = imread(imgName);
-	resize(image, image, Size(), 224.0 / width, 224.0 / height, INTER_CUBIC);
 	vector<DetectedObject> objs;
-	DnnDetector detector(model_path, config_path, labels_path, width, height, swap, scalar, 127.5);
+	DnnDetector detector(model_path, config_path, labels_path, 300, 300, swap, Scalar(127.5, 127.5, 127.5), 0.007843);
 	objs = detector.Detect(image);
 	namedWindow("window");
 	for (auto i : objs)
@@ -57,11 +56,11 @@ int main(int argc, const char** argv) {
 		Point p2(i.xRightTop, i.yRightTop);
 		Rect rect(p1, p2);
 		rectangle(image, rect, (70, 10, 22),8);
-		string text = "Chance: " + to_string(i.confidence*100) + "% Name: " + i.classname;
+		string text = "Chance: " + to_string(i.confidence*100) + "% class: " + i.classname;
 
 
-		putText(image, text, p1, FONT_HERSHEY_DUPLEX, 1.2, Scalar(255, 255, 255), 3);
-		putText(image, text, p2, FONT_HERSHEY_DUPLEX, 1.2, Scalar(70, 10, 22), 1);
+		putText(image, text, p1, FONT_HERSHEY_DUPLEX, 0.5, Scalar(255, 255, 255), 0.2);
+		//putText(image, text, p2, FONT_HERSHEY_DUPLEX, 1.2, Scalar(70, 10, 22), 1);
 
 	}
 	imshow("window", image);
