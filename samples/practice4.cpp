@@ -149,6 +149,10 @@ int main(int argc, char** argv) {
     String detector_model = parser.get<String>("detector_model");
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
+	video_name = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/data/catdog.mp4";
+	detector_model = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP-build/mobilenet-ssd.prototxt";
+	detector_weights = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP-build/mobilenet-ssd.caffemodel";
+	
 
     if (video_name.empty() || detector_model.empty() || detector_weights.empty())
     {
@@ -220,17 +224,17 @@ int main(int argc, char** argv) {
 
         // Drawing all detected objects on a frame by BLUE COLOR
         for (const auto &detection : detections) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
+            cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 1);
         }
 
         // Drawing tracked detections only by RED color and print ID and detection
         // confidence level.
         for (const auto &detection : tracker->trackedDetections()) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
+            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 1);
             std::string text = std::to_string(detection.object_id) +
                 " conf: " + std::to_string(detection.confidence);
             cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-                1.0, cv::Scalar(0, 0, 255), 3);
+                1.0, cv::Scalar(0, 0, 255), 1);
         }
 
         imshow("Tracking by Matching", frame);
