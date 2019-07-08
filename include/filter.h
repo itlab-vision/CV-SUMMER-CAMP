@@ -26,13 +26,13 @@ public:
 class ResizeFilter : public Filter
 {
 public:
-	ResizeFilter(int width, int height);
+	ResizeFilter(std::int32_t width, std::int32_t height);
 
 	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
 
 private:
-	int m_width;
-	int m_height;
+	std::int32_t m_width;
+	std::int32_t m_height;
 
 };
 

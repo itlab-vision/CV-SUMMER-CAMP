@@ -7,7 +7,7 @@ void GrayFilter::ProcessImage(const cv::Mat &src, cv::Mat &dst)
 
 
 
-ResizeFilter::ResizeFilter(int width, int height)
+ResizeFilter::ResizeFilter(std::int32_t width, std::int32_t height)
 	: m_width(width), m_height(height) {}
 
 

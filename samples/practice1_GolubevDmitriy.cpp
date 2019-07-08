@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	if (parser.has("help"))
 	{
 		parser.printMessage();
-		return 0;
+		return 0;  
 	}
 	if (!parser.check())
 	{
