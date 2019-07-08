@@ -12,8 +12,8 @@ using namespace cv::tbm;
 
 static const char* keys =
 { "{video_name       | | video name                       }"
-"{start_frame      |100| Start frame                      }"
-"{frame_step       |3| Frame step                       }"
+"{start_frame      |0| Start frame                      }"
+"{frame_step       |1| Frame step                       }"
 "{detector_model   | | Path to detector's Caffe model   }"
 "{detector_weights | | Path to detector's Caffe weights }"
 "{desired_class_id |-1| The desired class that should be tracked }"
@@ -191,7 +191,7 @@ int main(int argc, char** argv) {
 
 	//open the capture
 	VideoCapture cap;
-	cap.open(video_name);
+	bool a = cap.open(video_name);
 	cap.set(CAP_PROP_POS_FRAMES, start_frame);
 	// Define the codec and create VideoWriter object.The output is stored in 'outcpp.avi' file.
 	// Define the fps to be equal to 10. Also frame size is passed.
