@@ -140,7 +140,7 @@ createTrackerByMatchingWithFastDescriptor() {
 	return tracker;
 };
 
-String classNames[20] = {
+String classNames[21] = {
 "background",
 "aeroplane",
 "bicycle",
@@ -176,8 +176,9 @@ int main(int argc, char** argv) {
 	String detector_weights = parser.get<String>("detector_weights");
 	int desired_class_id = parser.get<int>("desired_class_id");
 
+	//add diff colors
 	std::map<String, Scalar> classColors;
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 21; i++) {
 		classColors.insert(pair<String, Scalar>(classNames[i], Scalar(0+i*10, 255, 100+i*5)));
 	}
 	
@@ -266,7 +267,7 @@ int main(int argc, char** argv) {
 			
 			std::string text = classNames[detector.cur_class_id] +" "  + std::to_string(detection.object_id) +
 				" conf: " + std::to_string(detection.confidence);
-			cout << detector.cur_class_id << classNames[detector.cur_class_id] << endl;
+			//cout << detector.cur_class_id << classNames[detector.cur_class_id-1] << endl;
 			cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
 				1.0, classColors[classNames[detector.cur_class_id]], 3);
 		}
