@@ -22,8 +22,8 @@ DnnClassificator::DnnClassificator(string _model, string _config, string _labels
  Mat DnnClassificator::Classify(Mat image)
 {
 	 Mat inputTensor;
-	 double scale = 0.017;
-	 blobFromImage(image, inputTensor, scale, Size(inputWidth,inputHeight), mean, swapRB, false, CV_32F);
+	 double scale = 1;
+	 blobFromImage(image, inputTensor, scale, Size(inputWidth,inputHeight), mean, swapRB);
 	 net.setInput(inputTensor);
 	 Mat prob = net.forward();
 	 prob = prob.reshape(1, 1);
