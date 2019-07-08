@@ -103,9 +103,13 @@ public:
             cur_rect = cur_rect & Rect(Point(), frame.size());
             if (cur_rect.empty())
                 continue;
-
-            TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1);
-            res.push_back(cur_obj);
+			// add the cat, but ignore the dogs
+			if (cur_class_id == 8) {
+				TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1);
+				res.push_back(cur_obj);
+			}
+            // TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1);
+            // res.push_back(cur_obj);
         }
         return res;
     }
@@ -220,17 +224,19 @@ int main(int argc, char** argv) {
 
         // Drawing all detected objects on a frame by BLUE COLOR
         for (const auto &detection : detections) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
+            cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 1);
         }
 
         // Drawing tracked detections only by RED color and print ID and detection
         // confidence level.
         for (const auto &detection : tracker->trackedDetections()) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
+            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 1);
             std::string text = std::to_string(detection.object_id) +
                 " conf: " + std::to_string(detection.confidence);
             cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-                1.0, cv::Scalar(0, 0, 255), 3);
+                1.0, cv::Scalar(0, 0, 255), 1);
+			std::string type = std::to_string(detection.frame_idx) + "type";
+			cv::putText(frame, type, detection.rect.br(), cv::FONT_HERSHEY_COMPLEX_SMALL, 1.0, cv::Scalar(0, 255, 255));
         }
 
         imshow("Tracking by Matching", frame);

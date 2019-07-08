@@ -116,7 +116,7 @@ std::vector<cv::Scalar> GenRandomColors(int colors_num) {
 ///
 void DrawPolyline(const std::vector<cv::Point>& polyline,
                   const cv::Scalar& color, CV_OUT cv::Mat& image,
-                  int lwd = 5) {
+                  int lwd = 2) {
     TBM_CHECK(!image.empty());
     TBM_CHECK_EQ(image.type(), CV_8UC3);
     TBM_CHECK_GT(lwd, 0);
@@ -1285,12 +1285,12 @@ cv::Mat TrackerByMatching::drawActiveTracks(const cv::Mat &frame) {
         DrawPolyline(centers, colors_[idx % colors_.size()], out_frame);
         std::stringstream ss;
         ss << idx;
-        cv::putText(out_frame, ss.str(), centers.back(), cv::FONT_HERSHEY_SCRIPT_COMPLEX, 2.0,
-                    colors_[idx % colors_.size()], 3);
+        cv::putText(out_frame, ss.str(), centers.back(), cv::FONT_HERSHEY_COMPLEX_SMALL, 2.0,
+                    colors_[idx % colors_.size()], 1);
         auto track = tracks().at(idx);
         if (track.lost) {
             cv::line(out_frame, active_track.second.back(),
-                     Center(track.predicted_rect), cv::Scalar(0, 0, 0), 4);
+                     Center(track.predicted_rect), cv::Scalar(0, 0, 0), 1);
         }
     }
 
