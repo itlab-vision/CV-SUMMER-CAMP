@@ -27,6 +27,7 @@ public:
 		std::int32_t inputWidth, std::int32_t inputHeight, std::double_t scale, cv::Scalar mean = cv::Scalar(0, 0, 0, 0), bool swapRB = false);
 
 	virtual vector<DetectedObject> Detect(Mat image);
+	void showParams();
 
 private:
 	std::string m_pathToModel, m_pathToConfig, m_pathToLabel;
@@ -39,7 +40,4 @@ private:
 
 	cv::dnn::Net m_net;
 	cv::Mat prob;
-
-	std::vector<DetectedObject> m_obects;
-
 };

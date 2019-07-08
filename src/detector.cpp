@@ -19,20 +19,12 @@ DnnDetector::DnnDetector(std::string pathToModel, std::string pathToConfig, std:
 
 	m_net.setPreferableBackend(cv::dnn::DNN_BACKEND_DEFAULT);
 	m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-
-	std::cout << "model: " << m_pathToModel << std::endl;
-	std::cout << "config: " << m_pathToConfig << std::endl;
-	std::cout << "label: " << m_pathToLabel << std::endl;
-
-	std::cout << "W: " << m_width << ", H: " << m_height << std::endl;
-	std::cout << "Scale: " << m_scale << std::endl;
-	std::cout << "Mean: " << m_mean << std::endl;
-	std::cout << "SwapRB: " << swapRB << std::endl;
 }
 
 
 vector<DetectedObject> DnnDetector::Detect(Mat image)
 {
+	std::vector<DetectedObject> detObjects;
 	cv::Mat inputTensor;
 
 	cv::dnn::blobFromImage(image, inputTensor, m_scale, cv::Size(m_width, m_height), m_mean, m_swapRB);
@@ -53,24 +45,22 @@ vector<DetectedObject> DnnDetector::Detect(Mat image)
 		object.Right =	prob.at<std::float_t>(i, 5) * image.size().width;
 		object.Top =	prob.at<std::float_t>(i, 6) * image.size().height;
 
-		m_obects.push_back(object);
+		detObjects.push_back(object);
 	}
 
-	std::uint32_t counter = 0;
-	for (auto &obj : m_obects)
-	{
-		std::cout << "Obj " << counter << ":\t";
+	return detObjects;
+}
 
-		std::cout << "classId: " << obj.classId << ",\t";
-		std::cout << "confidence: " << obj.confidence << ",\t";
 
-		std::cout << "L: " << obj.Left << ",\t";
-		std::cout << "B: " << obj.Bottom << ",\t";
-		std::cout << "R: " << obj.Right << ",\t";
-		std::cout << "T: " << obj.Top << std::endl;
 
-		counter++;
-	}
+void  DnnDetector::showParams()
+{
+	std::cout << "model: " << m_pathToModel << std::endl;
+	std::cout << "config: " << m_pathToConfig << std::endl;
+	std::cout << "label: " << m_pathToLabel << std::endl;
 
-	return m_obects;
+	std::cout << "W: " << m_width << ", H: " << m_height << std::endl;
+	std::cout << "Scale: " << m_scale << std::endl;
+	std::cout << "Mean: " << m_mean << std::endl;
+	std::cout << "SwapRB: " << m_swapRB << std::endl;
 }
