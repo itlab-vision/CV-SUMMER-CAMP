@@ -227,10 +227,10 @@ int main(int argc, char** argv) {
         // confidence level.
         for (const auto &detection : tracker->trackedDetections()) {
             cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
-            std::string text = std::to_string(detection.object_id) +
-                " conf: " + std::to_string(detection.confidence);
-            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-                1.0, cv::Scalar(0, 0, 255), 3);
+            std::string text = "Class: " + std::to_string(detection.object_id) +
+                " Confidence: " + std::to_string(detection.confidence);
+            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_SIMPLEX,
+                1.0, cv::Scalar(0, 0, 255), 2);
         }
 
         imshow("Tracking by Matching", frame);
