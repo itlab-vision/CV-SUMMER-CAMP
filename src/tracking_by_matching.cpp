@@ -23,6 +23,8 @@
 
 using namespace cv::tbm;
 
+
+
 CosDistance::CosDistance(const cv::Size &descriptor_size)
     : descriptor_size_(descriptor_size) {
     TBM_CHECK(descriptor_size.area() != 0);
@@ -1273,20 +1275,22 @@ TrackedObjects TrackerByMatching::trackedDetections() const {
 cv::Mat TrackerByMatching::drawActiveTracks(const cv::Mat &frame) {
     cv::Mat out_frame = frame.clone();
 
-    if (colors_.empty()) {
-        int num_colors = 100;
-        colors_ = GenRandomColors(num_colors);
-    }
+    
+
+	cv::Scalar color[9] = { cv::Scalar(255,0,0),	cv::Scalar(0,0,255),	 cv::Scalar(0,255,0),
+		cv::Scalar(255,255,0),cv::Scalar(255,0,255),	 cv::Scalar(0,255,255),
+		cv::Scalar(155,200,90),cv::Scalar(200,90,155),	cv::Scalar(90,155,200), };
+    
 
     auto active_tracks = getActiveTracks();
     for (auto active_track : active_tracks) {
         size_t idx = active_track.first;
         auto centers = active_track.second;
-        DrawPolyline(centers, colors_[idx % colors_.size()], out_frame);
+        DrawPolyline(centers, color[idx % 9], out_frame);
         std::stringstream ss;
         ss << idx;
         cv::putText(out_frame, ss.str(), centers.back(), cv::FONT_HERSHEY_SCRIPT_COMPLEX, 2.0,
-                    colors_[idx % colors_.size()], 3);
+                    color[idx % 9], 3);
         auto track = tracks().at(idx);
         if (track.lost) {
             cv::line(out_frame, active_track.second.back(),

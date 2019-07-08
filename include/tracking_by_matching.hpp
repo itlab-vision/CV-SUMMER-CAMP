@@ -26,6 +26,8 @@ struct CV_EXPORTS TrackedObject {
     int frame_idx;       ///< Frame index where object was detected (-1 if N/A).
     int object_id;       ///< Unique object identifier (-1 if N/A).
     uint64_t timestamp;  ///< Timestamp in milliseconds.
+	std::string cName;
+	int class_id;
 
     ///
     /// \brief Default constructor.
@@ -34,7 +36,9 @@ struct CV_EXPORTS TrackedObject {
         : confidence(-1),
         frame_idx(-1),
         object_id(-1),
-        timestamp(0) {}
+        timestamp(0),
+		class_id(-1),
+		cName(""){}
 
     ///
     /// \brief Constructor with parameters.
@@ -44,12 +48,13 @@ struct CV_EXPORTS TrackedObject {
     /// \param object_id Object ID.
     ///
     TrackedObject(const cv::Rect &rect, float confidence, int frame_idx,
-                  int object_id)
+                  int object_id,std::string class_name)
         : rect(rect),
         confidence(confidence),
         frame_idx(frame_idx),
         object_id(object_id),
-        timestamp(0) {}
+        timestamp(0),
+		cName(class_name){}
 };
 
 using TrackedObjects = std::deque<TrackedObject>;
