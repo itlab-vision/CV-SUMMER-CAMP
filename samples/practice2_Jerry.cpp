@@ -12,6 +12,7 @@ using namespace std;
 
 const char* cmdAbout = "Sample of OpenCV usage. ";
 
+bool debug = false;
 
 const char* cmdOptions =
 "{ i  image                             | <none> | image to process                  }"
@@ -44,10 +45,9 @@ int main(int argc, char** argv)
 	// Load image and init parameters
 	String imgName(parser.get<String>("image"));
 
-	/*
+	
 	int width = parser.get<int>("width");
 	int heigth = parser.get<int>("heigth");
-	*/
 
 	String model_path(parser.get<String>("model_path"));
 	String config_path(parser.get<String>("config_path"));
@@ -56,11 +56,6 @@ int main(int argc, char** argv)
 	bool swap = parser.get<bool>("swap");
 
 	Mat image = imread(imgName);
-	
-	
-	int width = image.cols;
-	int heigth = image.rows;
-	
 
 	//Image classification
 	DnnClassificator classificator(model_path, config_path, label_path, width, heigth, mean, swap);
@@ -76,10 +71,10 @@ int main(int argc, char** argv)
 
 	//Show result
 
-	bool debug = true;
+	
 
 	if (debug)
-		cout << "matrix: " << result.reshape(1, 1) << endl << "rows: " << image.rows << ", columns: " << image.cols;
+		cout << "matrix: " << result.reshape(1, 1) << endl;
 
 	 cout << "probability: " << probability << ", class: " << classId << endl;
 

@@ -10,7 +10,7 @@ DnnClassificator::DnnClassificator(String path_to_model, String path_to_config, 
 	this->mean = mean;
 	this->swapRB = swapRB;
 
-	this->net= readNet(path_to_model, path_to_config, path_to_labels);
+	this->net= readNet(path_to_model, path_to_config);
 	//net.setPreferableBackend();
 	//net.setPreferableTarget();
 }
