@@ -46,8 +46,8 @@ int main(int argc, char** argv)
 	String imgName(parser.get<String>("image"));
 
 	
-	int width = parser.get<int>("width");
-	int heigth = parser.get<int>("heigth");
+	double width = parser.get<int>("width");
+	double heigth = parser.get<int>("heigth");
 
 	String model_path(parser.get<String>("model_path"));
 	String config_path(parser.get<String>("config_path"));
