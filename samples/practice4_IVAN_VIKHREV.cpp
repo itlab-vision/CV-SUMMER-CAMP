@@ -12,8 +12,8 @@ using namespace cv::tbm;
 
 static const char* keys =
 { "{video_name       | | video name                       }"
-"{start_frame      |0| Start frame                      }"
-"{frame_step       |1| Frame step                       }"
+"{start_frame      |100| Start frame                      }"
+"{frame_step       |3| Frame step                       }"
 "{detector_model   | | Path to detector's Caffe model   }"
 "{detector_weights | | Path to detector's Caffe weights }"
 "{desired_class_id |-1| The desired class that should be tracked }"
@@ -49,7 +49,7 @@ cv::Ptr<ITrackerByMatching> createTrackerByMatchingWithFastDescriptor();
 class DnnObjectDetector
 {
 public:
-	int cur_class_id;
+	vector<int> classId;
 	DnnObjectDetector(const String& net_caffe_model_path, const String& net_caffe_weights_path,
 		int desired_class_id = -1,
 		float confidence_threshold = 0.2,
@@ -87,7 +87,7 @@ public:
 		for (int i = 0; i < detection_as_mat.rows; i++)
 		{
 			float cur_confidence = detection_as_mat.at<float>(i, 2);
-			cur_class_id = static_cast<int>(detection_as_mat.at<float>(i, 1));
+			int cur_class_id = static_cast<int>(detection_as_mat.at<float>(i, 1));
 			int x_left = static_cast<int>(detection_as_mat.at<float>(i, 3) * frame.cols);
 			int y_bottom = static_cast<int>(detection_as_mat.at<float>(i, 4) * frame.rows);
 			int x_right = static_cast<int>(detection_as_mat.at<float>(i, 5) * frame.cols);
@@ -107,6 +107,7 @@ public:
 
 			TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1);
 			res.push_back(cur_obj);
+			classId.push_back(cur_class_id);
 		}
 		return res;
 	}
@@ -154,7 +155,7 @@ String classNames[21] = {
 "cow",
 "diningtable",
 "dog",
-"horse"
+"horse",
 "motorbike",
 "person",
 "pottedplant",
@@ -179,7 +180,7 @@ int main(int argc, char** argv) {
 	//add diff colors
 	std::map<String, Scalar> classColors;
 	for (int i = 0; i < 21; i++) {
-		classColors.insert(pair<String, Scalar>(classNames[i], Scalar(0+i*10, 255, 100+i*5)));
+		classColors.insert(pair<String, Scalar>(classNames[i], Scalar(0+i*10, 200, 100+i*5)));
 	}
 	
 	if (video_name.empty() || detector_model.empty() || detector_weights.empty())
@@ -254,22 +255,21 @@ int main(int argc, char** argv) {
 		// Drawing colored "worms" (tracks).
 		frame = tracker->drawActiveTracks(frame);
 
-
 		// Drawing all detected objects on a frame by BLUE COLOR
 		for (const auto &detection : detections) {
-			cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
+			cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 1);
 		}
 
 		// Drawing tracked detections only by RED color and print ID and detection
 		// confidence level.
+		int i = 0;
 		for (const auto &detection : tracker->trackedDetections()) {
-			cv::rectangle(frame, detection.rect, classColors[classNames[detector.cur_class_id]], 3);
-			
-			std::string text = classNames[detector.cur_class_id] +" "  + std::to_string(detection.object_id) +
+			cv::rectangle(frame, detection.rect, classColors[classNames[detector.classId[i]]], 1,1);
+			std::string text = classNames[detector.classId[i]] +" "  + std::to_string(detector.classId[i]) +
 				" conf: " + std::to_string(detection.confidence);
-			//cout << detector.cur_class_id << classNames[detector.cur_class_id-1] << endl;
-			cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-				1.0, classColors[classNames[detector.cur_class_id]], 3);
+			cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX_SMALL,
+				1.0, classColors[classNames[detector.classId[i]]], 1);
+			i++;
 		}
 
 		imshow("Tracking by Matching", frame);
