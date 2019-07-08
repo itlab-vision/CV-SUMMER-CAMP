@@ -70,6 +70,9 @@ int main(int argc, char** argv)
 	double probability;
 	minMaxLoc(result.reshape(1, 1), 0, &probability, 0, &classIdPoint);
 	int classId = classIdPoint.x;
+
+	// для нескольких точек надо работать с MatchTemplate ?
+
 	//Show result
 
 	cout << "rows: " << image.rows<< ", columns: " << image.cols << ", probability: " << probability << ", class: " << classId << endl;
