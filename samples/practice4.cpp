@@ -149,6 +149,10 @@ int main(int argc, char** argv) {
     String detector_model = parser.get<String>("detector_model");
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
+	video_name = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/data/catdog.mp4";
+	 detector_weights = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel";
+	 detector_model = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.prototxt";
+
 
     if (video_name.empty() || detector_model.empty() || detector_weights.empty())
     {
