@@ -23,8 +23,8 @@ public:
 class DnnDetector : public Detector
 {
 public:
-	DnnDetector(const std::string &pathToModel, const std::string &pathToConfig, const std::string &pathToLabel,
-		const std::int32_t &inputWidth, const std::int32_t &inputHeight, const std::double_t scale, const cv::Scalar &mean = cv::Scalar(0, 0, 0, 0), const bool &swapRB = false);
+	DnnDetector(std::string pathToModel, std::string pathToConfig, std::string pathToLabel,
+		std::int32_t inputWidth, std::int32_t inputHeight, std::double_t scale, cv::Scalar mean = cv::Scalar(0, 0, 0, 0), bool swapRB = false);
 
 	virtual vector<DetectedObject> Detect(Mat image);
 

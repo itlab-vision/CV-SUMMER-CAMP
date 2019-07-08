@@ -21,7 +21,7 @@ void ResizeFilter::ProcessImage(const cv::Mat &src, cv::Mat &dst)
 
 
 
-GaussianFilter::GaussianFilter(const cv::Size &kernel)
+GaussianFilter::GaussianFilter(cv::Size kernel)
 	: m_kernel(kernel) {}
 
 
@@ -36,7 +36,7 @@ void GaussianFilter::ProcessImage(const cv::Mat &src, cv::Mat &dst)
 
 
 
-FilterBarleyBreak::FilterBarleyBreak(const std::uint32_t &scale) : m_scale(scale) {}
+FilterBarleyBreak::FilterBarleyBreak(std::uint32_t scale) : m_scale(scale) {}
 
 
 

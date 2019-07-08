@@ -1,8 +1,8 @@
 #include "detector.h"
 #include <conio.h>
 
-DnnDetector::DnnDetector(const std::string &pathToModel, const std::string &pathToConfig, const std::string &pathToLabel,
-	const std::int32_t &inputWidth, const std::int32_t &inputHeight, const std::double_t scale, const cv::Scalar &mean, const bool &swapRB)
+DnnDetector::DnnDetector(std::string pathToModel, std::string pathToConfig, std::string pathToLabel,
+	std::int32_t inputWidth, std::int32_t inputHeight, std::double_t scale, cv::Scalar mean, bool swapRB)
 {
 	m_pathToModel = pathToModel;
 	m_pathToConfig = pathToConfig;
@@ -11,7 +11,7 @@ DnnDetector::DnnDetector(const std::string &pathToModel, const std::string &path
 	m_width = inputWidth;
 	m_height = inputHeight;
 
-	m_scale = scale;
+	m_scale =  1.0 / scale;
 	m_mean = mean;
 	m_swapRB = swapRB;
 
@@ -38,19 +38,20 @@ vector<DetectedObject> DnnDetector::Detect(Mat image)
 	cv::dnn::blobFromImage(image, inputTensor, m_scale, cv::Size(m_width, m_height), m_mean, m_swapRB);
 
 	m_net.setInput(inputTensor);
-	prob = m_net.forward().reshape(1, 100);
-
+	prob = m_net.forward().reshape(1, 1);
+	prob.reshape(1, prob.cols / 7).copyTo(prob);
+	
 	for (std::uint32_t i = 0; i < prob.rows; i++)
 	{
 		DetectedObject object;
 
-		object.uuid =	prob.at<std::float_t>(i, 1);
-		std::cout << "Confidence: " << i << prob.at<std::float_t>(i, 2) << std::endl;
+		object.classId =	prob.at<std::float_t>(i, 1);
+		object.confidence = prob.at<std::float_t>(i, 2);
 
-		object.Left =	prob.at<std::float_t>(i, 3);
-		object.Bottom = prob.at<std::float_t>(i, 4);
-		object.Right =	prob.at<std::float_t>(i, 5);
-		object.Top =	prob.at<std::float_t>(i, 6);
+		object.Left =	prob.at<std::float_t>(i, 3) * image.size().width;
+		object.Bottom = prob.at<std::float_t>(i, 4) * image.size().height;
+		object.Right =	prob.at<std::float_t>(i, 5) * image.size().width;
+		object.Top =	prob.at<std::float_t>(i, 6) * image.size().height;
 
 		m_obects.push_back(object);
 	}
@@ -60,7 +61,8 @@ vector<DetectedObject> DnnDetector::Detect(Mat image)
 	{
 		std::cout << "Obj " << counter << ":\t";
 
-		std::cout << "classId: " << obj.uuid << ",\t";
+		std::cout << "classId: " << obj.classId << ",\t";
+		std::cout << "confidence: " << obj.confidence << ",\t";
 
 		std::cout << "L: " << obj.Left << ",\t";
 		std::cout << "B: " << obj.Bottom << ",\t";

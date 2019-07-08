@@ -104,5 +104,5 @@ std::vector<cv::Rect> convertToRect(const std::vector<DetectedObject> &objects)
 }
 cv::Rect convertToRect(const DetectedObject &object)
 {
-	return cv::Rect(object.Left, object.Top, object.Right - object.Left, object.Bottom - object.Top);
+	return cv::Rect(object.Left, object.Bottom, object.Right - object.Left, object.Top - object.Bottom);
 }

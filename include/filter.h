@@ -41,7 +41,7 @@ private:
 class GaussianFilter : public Filter
 {
 public:
-	GaussianFilter(const cv::Size &kernel);
+	GaussianFilter(cv::Size kernel);
 
 	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
 
@@ -55,7 +55,7 @@ private:
 class FilterBarleyBreak : public Filter
 {
 public:
-	FilterBarleyBreak(const std::uint32_t &scale);
+	FilterBarleyBreak(std::uint32_t scale);
 
 	void ProcessImage(const cv::Mat &src, cv::Mat &dst);
 
