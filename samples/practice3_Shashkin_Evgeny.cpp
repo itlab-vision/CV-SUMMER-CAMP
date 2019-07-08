@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-
+#include <fstream>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/dnn.hpp>
@@ -15,11 +15,11 @@ const char* cmdAbout =
     "own doing-something-cool applications.";
 
 const char* cmdOptions =
-    "{ i image        | C:\\Users\\temp2019\\Desktop\\CV-SUMMER-CAMP\\data\\lobachevsky.jpg       | image to process                  }"
-	"{ w  width       | 300 | image width for classification    }"
-	"{ h  heigth      | 300 | image heigth fro classification   }"
-	"{ model_path     | C:\\Users\\temp2019\\Desktop\\object_detection\\common\\mobilenet-ssd\\caffe\\mobilenet-ssd.caffemodel | path to model                     }"
-	"{ config_path    | C:\\Users\\temp2019\\Desktop\\object_detection\\common\\mobilenet-ssd\\caffe\\mobilenet-ssd.prototxt | path to model configuration       }"
+	"{ i image        | <none> | image to process                  }"
+	"{ w  width       |        | image width for classification    }"
+	"{ h  heigth      |        | image heigth fro classification   }"
+	"{ model_path     |        | path to model                     }"
+	"{ config_path    |        | path to model configuration       }"
 	"{ label_path     |        | path to class labels              }"
 	"{ mean           |        | vector of mean model values       }"
 	"{ swap           |        | swap R and B channels. TRUE|FALSE }"
@@ -51,18 +51,39 @@ int main(int argc, const char** argv) {
 
   DnnDetector dnn(path_to_model, path_to_config, path_to_labels, imgWidth, imgHeight, swap, mean);
   vector<DetectedObject> vec = dnn.Detect(image);
-
-  Point leftBottom;
-  Point rightTop;
+  string labels[21] = {
+	  "background",
+	  "aeroplane",
+	  "bicycle",
+	  "bird",
+	  "boat",
+	  "bottle",
+	  "bus",
+	  "car",
+	  "cat",
+	  "chair",
+	  "cow",
+	  "diningtable",
+	  "dog",
+	  "horse",
+	  "motorbike",
+	  "person",
+	  "pottedplant",
+	  "sheep",
+	  "sofa",
+	  "train",
+	  "tvmonitor"
+  };
 
   for (int i = 0; i < vec.size(); i++)
   {
-	  leftBottom.x = image.cols*vec[i].Left;
-	  leftBottom.y = image.rows*vec[i].Bottom;
-	  rightTop.x = image.cols*vec[i].Right;
-	  rightTop.y = image.rows*vec[i].Top;
-	  rectangle(image, leftBottom, rightTop, (0, 255, 0));
+	  string className = labels[vec[i].uuid];
+	  rectangle(image, Point(vec[i].Left, vec[i].Bottom), Point(vec[i].Right, vec[i].Top), (0, 0, 255));
+	  putText(image, className, Point(vec[i].Left, vec[i].Bottom-6), FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 1, 0);
   }
 
+  namedWindow("My image", WINDOW_AUTOSIZE);
+  imshow("My image", image);
+  waitKey(0);
   return 0;
 }
