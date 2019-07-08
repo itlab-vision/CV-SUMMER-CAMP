@@ -21,6 +21,7 @@ const char* cmdOptions =
 	"{ h  heigth                            |        | image heigth fro classification   }"
 	"{ model_path                           |        | path to model                     }"
 	"{ config_path                          |        | path to model configuration       }"
+	"{ label_path                           |        | path to model configuration       }"
     "{ h ? help usage |        | print help message       }";
 
 
@@ -37,14 +38,20 @@ int main(int argc, const char** argv) {
 
   String imgName(parser.get<String>("image"));
   Mat image = imread(imgName);
-  DnnDetector dd(parser.get<string>("model_path"), parser.get<string>("config_path"));
+  DnnDetector dd(parser.get<string>("model_path"), parser.get<string>("config_path"),parser.get<string>("label_path"), parser.get<int>("w"), parser.get<int>("h"));
   vector<DetectedObject> v = dd.Detect(image);
-  // Do something cool.
-  //cout << "This is empty template sample." << endl;
-  /*for (auto a : v)
-	  for (int i = 0; i < 7;i++)
-		  cout << a. << ;
-*/
+  for (auto a : v) {
+	  string classes = "Class: " + std::to_string(a.uuid) + " " + a.classname;
+	  string confidence = "Confidence: " + std::to_string(a.score);
+	  Rect rect(Point(a.Left, a.Bottom), Point(a.Right, a.Top));
+	  cout << classes << " " << confidence << endl;
+	  rectangle(image, rect, Scalar(0, 255, 0), 1, 1, 0);
+
+	  putText(image, classes, Size(a.Left, a.Bottom - 20), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(0, 255, 255), 1, 0);
+	  putText(image, confidence, Size(a.Left, a.Bottom - 2), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(10, 99, 255), 1, 0);
+  }
+  imshow("detecting", image);
+  waitKey();
 
   return 0;
 }

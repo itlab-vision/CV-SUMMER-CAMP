@@ -21,8 +21,10 @@ public:
 class DnnDetector : public Detector
 {
 private:
+	int w, h;
 	Net net;
+	vector<string> labels;
 public:
-	DnnDetector(string path_to_model, string path_to_config);
+	DnnDetector(string path_to_model, string path_to_config,string path_to_label,int weight, int height);
 	virtual vector<DetectedObject> Detect(Mat image);
 };
