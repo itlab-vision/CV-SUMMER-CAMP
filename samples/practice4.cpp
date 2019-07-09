@@ -17,7 +17,6 @@ static const char* keys =
 "{detector_model   | | Path to detector's Caffe model   }"
 "{detector_weights | | Path to detector's Caffe weights }"
 "{desired_class_id |-1| The desired class that should be tracked }"
-"{class_id         |  | vector      }"
 };
 
 static void help()
@@ -154,7 +153,7 @@ int main(int argc, char** argv) {
     String detector_model = parser.get<String>("detector_model");
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
-	vector<int> class_id = parser.get<vector<int>>("class_id");
+	vector<int> class_id = {8, 12};
 
 	String label[21] = { "background", "aeroplane", "bicycle", "bird",
 	  "boat","bottle", "bus",  "car", "cat", "chair", "cow",
