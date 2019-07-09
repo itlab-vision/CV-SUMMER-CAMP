@@ -34,18 +34,18 @@ int main(int argc, char** argv)
         return 0;
     }
     
-    // Load image
-    String imgName(parser.get<String>("image"));
-
-    
-    // Filter image
+	// Load image
+	String imgName(parser.get<String>("image"));
 
 
-    // Show image
-    
-    
-    
-    
-    
-    return 0;
+	// Filter image
+
+
+	// Show image
+
+
+
+
+
+	return 0;
 }
