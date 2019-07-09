@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <set>
 
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
@@ -15,7 +16,7 @@ const char* cmdAbout = "Sample of OpenCV usage. ";
 const char* cmdOptions =
 "{ i  image                             | <none> | image to process                  }"
 "{ w  width                             |        | image width for classification    }"
-"{ h  heigth                            |        | image heigth fro classification   }"
+"{ h  heigth                            |        | image heigth for classification   }"
 "{ model_path                           |        | path to model                     }"
 "{ config_path                          |        | path to model configuration       }"
 "{ label_path                           |        | path to class labels              }"
