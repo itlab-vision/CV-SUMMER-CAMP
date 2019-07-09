@@ -24,7 +24,7 @@ static const char* keys =
 "{detector_labels_path  | | Path to detector's labels        }"
 "{classificator_labels_path | | Path to classificator's labels        }"
 "{classificator_model  | | Path to classificator's model        }"
-"{classificator_weight | | Path to classificator's weights        }"
+"{classificator_weights | | Path to classificator's weights        }"
 };
 
 
@@ -156,7 +156,7 @@ int main(int argc, char** argv) {
 
 	params squeeze_params = {
 		parser.get<String>("classificator_model"),
-		parser.get<String>("classificator_weight"),
+		parser.get<String>("classificator_weights"),
 		parser.get<String>("classificator_labels_path"),
 		Scalar(104.0, 117.0, 123.0), // mean
 		1, // scale
@@ -207,6 +207,7 @@ int main(int argc, char** argv) {
 	int frame_counter = -1;
 	int64 time_total = 0;
 	bool paused = false;
+	std::vector<String> already_save;
 	for (;; )
 	{
 		if (paused)
@@ -257,12 +258,13 @@ int main(int argc, char** argv) {
 
 		for (const auto &detection : tracker->trackedDetections()) {
 			std::pair<cv::String, double> dogClass;
-			if (detection.class_id != 12) {
+			if (detection.class_id == 12 && detection.confidence > 0.5) {
+				Mat subframe = frame(detection.rect);
 				dogClass = classifyDog(frame, squeeze_params);
-				String text = "Dog class: " + dogClass.first + ". Score: " + std::to_string(dogClass.second);
-				cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
-				cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-					1.0, Scalar(0, 0, 255));
+				if (std::find(already_save.begin(), already_save.begin(), dogClass.first) != already_save.end()) {
+					imwrite("../" + dogClass.first + ".jpg", subframe);
+					already_save.push_back(dogClass.first);
+				}
 			}else {
 				continue;
 			}

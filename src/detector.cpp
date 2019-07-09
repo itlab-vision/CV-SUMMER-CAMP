@@ -36,8 +36,6 @@ tbm::TrackedObjects DnnDetector::Detect(Mat image, int frame_idx) {
 	net.setInput(inputTensor);
 	Mat objectsProbability = net.forward().reshape(1,1);
 	int objectsNum = objectsProbability.cols / 7;
-	cout << objectsProbability << endl;
-
 
 	for (int i = 0; i < objectsNum; i++) {
 		int uuid = objectsProbability.at<float>(0, 1 + i * 7);
@@ -49,6 +47,9 @@ tbm::TrackedObjects DnnDetector::Detect(Mat image, int frame_idx) {
 		int top = objectsProbability.at<float>(0, 6 + i * 7) * height_source;
 
 		Rect rect(left, bottom, (right - left), (top - bottom));
+		rect = rect & Rect(Point(), image.size());
+		if (rect.empty())
+			continue;
 		tbm::TrackedObject cur_obj(rect, score, frame_idx, uuid, -1);
 
 		objects.push_back(cur_obj);
