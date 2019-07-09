@@ -8,5 +8,7 @@ struct DetectedObject
     int Top;
     int Bottom;
     int uuid;
+	int classid;
     std::string classname;
+	float confidence;
 };

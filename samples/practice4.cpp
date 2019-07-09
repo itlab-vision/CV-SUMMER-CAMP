@@ -4,14 +4,15 @@
 
 #include "tracking_by_matching.hpp"
 #include <iostream>
+#include <vector>
 
 
 using namespace std;
 using namespace cv;
 using namespace cv::tbm;
 
-static const char* keys =
-{ "{video_name       | | video name                       }"
+static const char* keys ={ 
+"{video_name       | | video name                       }"
 "{start_frame      |0| Start frame                      }"
 "{frame_step       |1| Frame step                       }"
 "{detector_model   | | Path to detector's Caffe model   }"
@@ -44,35 +45,52 @@ static void help()
         "\tp - pause/resume video\n";
 }
 
+int squareRR(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4){
+	int left = std::max(x1, x3);
+	int top = std::min(y2, y4);
+	int right = std::min(x2, x4);
+	int bottom = std::max(y1, y3);
+
+	int width = right - left;
+	int height = top - bottom;
+
+	if ((width < 0) || (height < 0)) return 0;
+
+	return width * height;
+}
+
+int square(int x1, int y1, int x2, int y2) {
+	return abs(x1 - x2)*abs(y1 - y2);
+}
+
 cv::Ptr<ITrackerByMatching> createTrackerByMatchingWithFastDescriptor();
 
-class DnnObjectDetector
-{
+class DnnObjectDetector{
 public:
-    DnnObjectDetector(const String& net_caffe_model_path, const String& net_caffe_weights_path,
-        int desired_class_id = -1,
-        float confidence_threshold = 0.2,
-        //the following parameters are default for popular MobileNet_SSD caffe model
-        const String& net_input_name = "data",
-        const String& net_output_name = "detection_out",
-        double net_scalefactor = 0.007843,
-        const Size& net_size = Size(300, 300),
-        const Scalar& net_mean = Scalar(127.5, 127.5, 127.5),
-        bool net_swapRB = false)
-        :desired_class_id(desired_class_id),
-        confidence_threshold(confidence_threshold),
-        net_input_name(net_input_name),
-        net_output_name(net_output_name),
-        net_scalefactor(net_scalefactor),
-        net_size(net_size),
-        net_mean(net_mean),
-        net_swapRB(net_swapRB)
+	DnnObjectDetector(const String& net_caffe_model_path, const String& net_caffe_weights_path, int _desired_class_id , vector<string> _v,
+		float confidence_threshold = 0.2,
+		//the following parameters are default for popular MobileNet_SSD caffe model
+		const String& net_input_name = "data",
+		const String& net_output_name = "detection_out",
+		double net_scalefactor = 0.007843,
+		const Size& net_size = Size(300, 300),
+		const Scalar& net_mean = Scalar(127.5, 127.5, 127.5),
+		bool net_swapRB = false)
+		:confidence_threshold(confidence_threshold),
+		net_input_name(net_input_name),
+		net_output_name(net_output_name),
+		net_scalefactor(net_scalefactor),
+		net_size(net_size),
+		net_mean(net_mean),
+		net_swapRB(net_swapRB)
     {
         net = dnn::readNetFromCaffe(net_caffe_model_path, net_caffe_weights_path);
+		v = _v;
+		desired_class_id = _desired_class_id;
         if (net.empty())
             CV_Error(Error::StsError, "Cannot read Caffe net");
     }
-    TrackedObjects detect(const cv::Mat& frame, int frame_idx)
+	TrackedObjects detect(const cv::Mat& frame, int frame_idx)
     {
         Mat resized_frame;
         resize(frame, resized_frame, net_size);
@@ -85,6 +103,7 @@ public:
         TrackedObjects res;
         for (int i = 0; i < detection_as_mat.rows; i++)
         {
+			bool b = true;
             float cur_confidence = detection_as_mat.at<float>(i, 2);
             int cur_class_id = static_cast<int>(detection_as_mat.at<float>(i, 1));
             int x_left = static_cast<int>(detection_as_mat.at<float>(i, 3) * frame.cols);
@@ -98,14 +117,44 @@ public:
                 continue;
             if ((desired_class_id >= 0) && (cur_class_id != desired_class_id))
                 continue;
-
+			
             //clipping by frame size
             cur_rect = cur_rect & Rect(Point(), frame.size());
             if (cur_rect.empty())
                 continue;
 
-            TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1);
-            res.push_back(cur_obj);
+            TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1, cur_class_id, cur_class_id, "");
+			for (int i = 0; i < v.size(); i++) {
+				if (v[i] == label[cur_class_id]) {
+					b = false;
+				}
+			}
+			for (int j = 0; j < i; j++) {
+				int S = squareRR(x_left, y_bottom, x_right, y_top,
+					static_cast<int>(detection_as_mat.at<float>(j, 3) * frame.cols), 
+						static_cast<int>(detection_as_mat.at<float>(j, 4) * frame.rows), 
+							static_cast<int>(detection_as_mat.at<float>(j, 5) * frame.cols), 
+								static_cast<int>(detection_as_mat.at<float>(j, 6) * frame.rows));
+
+				if (S > 0) {
+					int S1 = square(x_left, y_bottom, x_right, y_top);
+					int S2 = square(static_cast<int>(detection_as_mat.at<float>(j, 3) * frame.cols),
+						static_cast<int>(detection_as_mat.at<float>(j, 4) * frame.rows),
+						static_cast<int>(detection_as_mat.at<float>(j, 5) * frame.cols),
+						static_cast<int>(detection_as_mat.at<float>(j, 6) * frame.rows));
+					float obs = (S1 + S2 - S);
+					float f = (S / obs);
+					if ( f > 0.9) {
+						if (cur_class_id < static_cast<int>(detection_as_mat.at<float>(j, 1))) {
+							b = false;
+						}
+						else {
+							if (res.size() != 0) res.erase(res.begin() + j);
+						}
+					}
+				}
+			}
+            if(b) res.push_back(cur_obj);
         }
         return res;
     }
@@ -119,6 +168,8 @@ private:
     Size net_size;
     Scalar net_mean;
     bool net_swapRB;
+	vector<string> v;
+	const string label[21] = { "background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair" ,"cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa",  "train", "tvmonitor" };
 };
 
 cv::Ptr<ITrackerByMatching>
@@ -142,16 +193,23 @@ createTrackerByMatchingWithFastDescriptor() {
 int main(int argc, char** argv) {
     CommandLineParser parser(argc, argv, keys);
     cv::Ptr<ITrackerByMatching> tracker = createTrackerByMatchingWithFastDescriptor();
-
+	const string label[21] = { "background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair" ,"cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa",  "train", "tvmonitor" };
     String video_name = parser.get<String>("video_name");
     int start_frame = parser.get<int>("start_frame");
     int frame_step = parser.get<int>("frame_step");
     String detector_model = parser.get<String>("detector_model");
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
-
-    if (video_name.empty() || detector_model.empty() || detector_weights.empty())
-    {
+	desired_class_id = -1;
+	video_name = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/data/topdogs.mp4";
+	detector_weights = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel";
+    detector_model = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.prototxt";
+	std::vector<string> v;
+	v = {"cat", "dog"};
+	v = {};
+	start_frame = 240;
+	frame_step = 2;
+    if (video_name.empty() || detector_model.empty() || detector_weights.empty()){
         help();
         return -1;
     }
@@ -161,8 +219,7 @@ int main(int argc, char** argv) {
     cap.open(video_name);
     cap.set(CAP_PROP_POS_FRAMES, start_frame);
 
-    if (!cap.isOpened())
-    {
+    if (!cap.isOpened()){
         help();
         cout << "***Could not initialize capturing...***\n";
         cout << "Current parameter's value: \n";
@@ -172,7 +229,7 @@ int main(int argc, char** argv) {
 
     // If you use the popular MobileNet_SSD detector, the default parameters may be used.
     // Otherwise, set your own parameters (net_mean, net_scalefactor, etc).
-    DnnObjectDetector detector(detector_model, detector_weights, desired_class_id);
+    DnnObjectDetector detector(detector_model, detector_weights, desired_class_id, v);
 
     Mat frame;
     namedWindow("Tracking by Matching", 1);
@@ -180,7 +237,7 @@ int main(int argc, char** argv) {
     int frame_counter = -1;
     int64 time_total = 0;
     bool paused = false;
-    for (;; )
+    for (;;)
     {
         if (paused)
         {
@@ -219,18 +276,23 @@ int main(int argc, char** argv) {
 
 
         // Drawing all detected objects on a frame by BLUE COLOR
-        for (const auto &detection : detections) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
+		for (const auto &detection : detections) {
+			cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 1);
+			std::string text = std::to_string(detection.object_id) + "/" + label[detection.class_id] +
+				" conf: " + std::to_string(detection.confidence);
+			cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
+				0.5, cv::Scalar(0, 0, 255), 1);
+
         }
 
         // Drawing tracked detections only by RED color and print ID and detection
         // confidence level.
         for (const auto &detection : tracker->trackedDetections()) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
-            std::string text = std::to_string(detection.object_id) +
-                " conf: " + std::to_string(detection.confidence);
-            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-                1.0, cv::Scalar(0, 0, 255), 3);
+            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 1);
+			std::string text = std::to_string(detection.object_id) + "/" + label[detection.class_id] +
+				" conf: " + std::to_string(detection.confidence);
+			cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
+				0.5, cv::Scalar(0, 0, 255), 1);
         }
 
         imshow("Tracking by Matching", frame);
