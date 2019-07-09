@@ -140,7 +140,7 @@ createTrackerByMatchingWithFastDescriptor() {
 }
 
 String classNames[20] = {
-|"background",
+| "background",
 "aeroplane",
 "bicycle",
 "bird",
@@ -161,9 +161,9 @@ String classNames[20] = {
 "sofa",
 "train",
 "tvmonitor"
-}
+};
 
-std::map<String, Scalar> classColors[];
+
 int main(int argc, char** argv) {
     CommandLineParser parser(argc, argv, keys);
     cv::Ptr<ITrackerByMatching> tracker = createTrackerByMatchingWithFastDescriptor();

@@ -538,7 +538,7 @@ cv::Ptr<ITrackerByMatching> cv::tbm::createTrackerByMatching(const TrackerParams
 
 TrackerParams::TrackerParams()
     : min_track_duration(1000),
-    forget_delay(150),
+    forget_delay(100),
     aff_thr_fast(0.8f),
     aff_thr_strong(0.75f),
     shape_affinity_w(0.5f),
@@ -547,7 +547,7 @@ TrackerParams::TrackerParams()
     min_det_conf(0.1f),
     bbox_aspect_ratios_range(0.666f, 5.0f),
     bbox_heights_range(40.f, 1000.f),
-    predict(25),
+    predict(10),
     strong_affinity_thr(0.2805f),
     reid_thr(0.61f),
     drop_forgotten_tracks(true),
@@ -680,10 +680,22 @@ void TrackerByMatching::SolveAssignmentProblem(
     cv::Mat dissimilarity;
     ComputeDissimilarityMatrix(track_ids, detections, descriptors,
                                dissimilarity);
-    //auto res = KuhnMunkres().Solve(dissimilarity);
-	auto res = KuhnMunkres().BruteForce(dissimilarity);
+    auto res = KuhnMunkres().Solve(dissimilarity);
+	//auto res = KuhnMunkres().BruteForce(dissimilarity);
 
-    for (size_t i = 0; i < detections.size(); i++) {
+	//lazy check 
+
+	//for (int i = 0; i < res.size(); i++) {
+	//	std::cout << res[i] << " " ;
+	//}
+	//std::cout << std::endl;
+	//for (int i = 0; i < res1.size(); i++) {
+	//	std::cout << res1[i] << " ";
+	//}
+	//std::cout << std::endl;
+	//std::cout << "-------------------------------------------" << std::endl;
+    
+	for (size_t i = 0; i < detections.size(); i++) {
         unmatched_detections.insert(i);
     }
 
