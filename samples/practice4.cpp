@@ -123,7 +123,7 @@ public:
             if (cur_rect.empty())
                 continue;
 
-            TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1, cur_class_id);
+            TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1, cur_class_id, cur_class_id, "");
 			for (int i = 0; i < v.size(); i++) {
 				if (v[i] == label[cur_class_id]) {
 					b = false;
@@ -149,7 +149,7 @@ public:
 							b = false;
 						}
 						else {
-							res.erase(res.begin() + j);
+							if (res.size() != 0) res.erase(res.begin() + j);
 						}
 					}
 				}
@@ -201,12 +201,14 @@ int main(int argc, char** argv) {
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
 	desired_class_id = -1;
-	video_name = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/data/catdog.mp4";
+	video_name = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/data/topdogs.mp4";
 	detector_weights = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel";
     detector_model = "C:/Users/temp2019/Desktop/CV-SUMMER-CAMP/mobilenet-ssd/caffe/mobilenet-ssd.prototxt";
 	std::vector<string> v;
 	v = {"cat", "dog"};
 	v = {};
+	start_frame = 240;
+	frame_step = 2;
     if (video_name.empty() || detector_model.empty() || detector_weights.empty()){
         help();
         return -1;
