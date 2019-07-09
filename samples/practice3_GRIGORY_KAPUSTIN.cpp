@@ -58,9 +58,7 @@ int main(int argc, const char** argv) {
 		rectangle(image, rect, (70, 10, 22),8);
 		string text = "Chance: " + to_string(i.confidence*100) + "% class: " + i.classname;
 
-
 		putText(image, text, p1, FONT_HERSHEY_DUPLEX, 0.5, Scalar(255, 255, 255), 0.2);
-		//putText(image, text, p2, FONT_HERSHEY_DUPLEX, 1.2, Scalar(70, 10, 22), 1);
 
 	}
 	imshow("window", image);

@@ -4,7 +4,7 @@
 
 #include "tracking_by_matching.hpp"
 #include <iostream>
-
+#include <fstream>
 
 using namespace std;
 using namespace cv;
@@ -46,6 +46,20 @@ static void help()
 
 cv::Ptr<ITrackerByMatching> createTrackerByMatchingWithFastDescriptor();
 
+vector<string> readLabels(string path)
+{
+	string input;
+	ifstream in(path);
+	vector <string> labels;
+	if (in.is_open())
+	{
+		while (getline(in, input))
+		{
+			labels.push_back(input);
+		}
+	}
+	return labels;
+}
 class DnnObjectDetector
 {
 public:
@@ -140,16 +154,21 @@ createTrackerByMatchingWithFastDescriptor() {
 }
 
 int main(int argc, char** argv) {
+
+	// "...."
+
     CommandLineParser parser(argc, argv, keys);
     cv::Ptr<ITrackerByMatching> tracker = createTrackerByMatchingWithFastDescriptor();
-
     String video_name = parser.get<String>("video_name");
     int start_frame = parser.get<int>("start_frame");
     int frame_step = parser.get<int>("frame_step");
     String detector_model = parser.get<String>("detector_model");
     String detector_weights = parser.get<String>("detector_weights");
+	String des_ids = parser.get<String>("des_ids");
     int desired_class_id = parser.get<int>("desired_class_id");
-
+	
+	/*cout << des_ids.size();
+	system("pause");*/
     if (video_name.empty() || detector_model.empty() || detector_weights.empty())
     {
         help();
@@ -229,6 +248,7 @@ int main(int argc, char** argv) {
             cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
             std::string text = std::to_string(detection.object_id) +
                 " conf: " + std::to_string(detection.confidence);
+			//
             cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
                 1.0, cv::Scalar(0, 0, 255), 3);
         }

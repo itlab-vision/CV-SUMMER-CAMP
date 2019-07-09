@@ -29,7 +29,9 @@ private:
 	Scalar scalar;
 	bool mirror;
 	Net net;
+	void loadLabels();
 public:
 	DnnClassificator(string model_path, string config_path, string labels_path, int inputWidth, int inputHeight, bool mirror, Scalar scalar);
 	Mat Classify(Mat image);
+	vector<string> getClassesNames();
 };
