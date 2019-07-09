@@ -11,7 +11,7 @@ using namespace std;
 class Filter
 {
     public:
-    virtual Mat ProcessImage(Mat image) = 0 {}
+    virtual Mat ProcessImage(const Mat& image) = 0 {}
 };
 class GrayFilter : Filter
 {
@@ -30,6 +30,6 @@ private:
 public:
     ResizeFilter(int newWidth, int newHeight);
 	
-    Mat ProcessImage(Mat image);
+    Mat ProcessImage(const Mat& image);
 	
 };
