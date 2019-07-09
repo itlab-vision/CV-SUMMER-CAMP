@@ -8,6 +8,7 @@
 #include <map>
 
 #include "detector.h"
+#include "classificator.h"
 
 
 using namespace std;
@@ -17,7 +18,7 @@ using namespace cv::tbm;
 
 struct DetectedFrame {
 	int id;
-	TrackedObjects obj;
+	Rect rect;
 	Mat frame;
 };
 
@@ -30,6 +31,38 @@ static const char* keys = {
 	"{detector_weights |  | Path to detector's Caffe weights         }"
 	"{desired_class_id |-1| The desired class that should be tracked }"
 };
+
+
+template<typename Iterator, typename Elem>
+bool contains(Iterator start, const Iterator& end, Elem elem) {
+	while (start != end) {
+		if (*start == elem) {
+			return true;
+		}
+		++start;
+	}
+	return false;
+}
+
+
+DetectedFrame findMax(const TrackedObjects& objects, const Mat& frame) {
+	double confidence = objects[0].confidence;
+	size_t index = 0;
+	for (size_t i = 1; i < objects.size(); ++i) {
+		if (objects[i].confidence > confidence) {
+			confidence = objects[i].confidence;
+			index = i;
+		}
+	}
+	return { objects[index].object_id, objects[index].rect, frame };
+}
+
+
+DetectedFrame findMax(const Mat& mat, const Rect& rect, const Mat& frame) {
+	Point point;
+	minMaxLoc(mat, nullptr, nullptr, nullptr, &point);
+	return { point.x, rect, frame };
+}
 
 
 std::vector<std::string> readLabel(const String& path) {
@@ -55,32 +88,27 @@ std::vector<cv::Mat> toArray(VideoCapture& cap) {
 }
 
 
-std::vector<DetectedFrame> findAll(DnnDetector& detector, std::vector<cv::Mat>& frames) {
+std::vector<DetectedFrame> findAll(DnnDetector& detector, const std::vector<cv::Mat>& frames) {
 	std::vector<DetectedFrame> result;
-	for (const auto& frame : frames) {
-		DetectedFrame temp;
-
-		temp.obj = detector.Detect(frame);
-		temp.frame = frame;
-		temp.id = temp.obj.front().object_id;
-		result.push_back(temp);
+	for (size_t i = 0; i < frames.size(); ++i) {
+		auto detected = detector.Detect(frames[i]);
+		if (!detected.empty()) {
+			result.push_back(findMax(detector.Detect(frames[i]), frames[i]));
+		}
 	}
 	return result;
 }
 
 
-std::vector<DetectedFrame> findUnique(DnnDetector& detector, std::vector<DetectedFrame>& frames) {
+std::vector<DetectedFrame> findUnique(DnnClassificator& classificator, const std::vector<DetectedFrame>& frames) {
 	std::vector<int> keys;
 	std::vector<DetectedFrame> result;
 	for (const auto& frame : frames) {
-		DetectedFrame temp;
-
-		temp.obj = detector.Detect(frame.frame);
-		if (std::find(keys.begin(), keys.end(), temp.id) != keys.end()) {
-			temp.frame = frame.frame;
-			temp.id = temp.obj.front().object_id;
-			result.push_back(temp);
-			keys.push_back(keys.front());
+		Mat detected_array = classificator.Classify(frame.frame);
+		DetectedFrame detected = (findMax(detected_array, frame.rect, frame.frame));
+		if (!contains(keys.begin(), keys.end(), detected.id)) {
+			result.push_back(detected);
+			keys.push_back(detected.id);
 		}
 	}
 	return result;
@@ -97,30 +125,28 @@ int main(int argc, char** argv) {
 	int frame_step = parser.get<int>("frame_step");
 	int desired_class_id = parser.get<int>("desired_class_id");
 
-	vector<String> labels = readLabel("C:/practice/CV-SUMMER-CAMP/data/model/labels.txt");
+	vector<String> labels = readLabel("E:/Projects/practice/CV-SUMMER-CAMP/data/model/squeezenet1.1.labels");
+	std::string outputPath = "E:/Projects/practice/CV-SUMMER-CAMP/data/output/";
 
 	VideoCapture cap(video_name);
 	cap.set(CAP_PROP_POS_FRAMES, start_frame);
 
-	std::vector<cv::Mat> video = toArray(cap);
-
 	DnnDetector dogDetector(detector_model, detector_weights, desired_class_id);
-	DnnDetector breedDetector("C:/practice/CV-SUMMER-CAMP/data/model/squeezenet1.1.caffemodel", "C:/practice/CV-SUMMER-CAMP/data/model/squeezenet1.1.prototxt");
+	DnnClassificator breedDetector("E:/Projects/practice/CV-SUMMER-CAMP/data/model/squeezenet1.1.caffemodel",
+		"E:/Projects/practice/CV-SUMMER-CAMP/data/model/squeezenet1.1.prototxt", 227, 227, 0, { 104.f, 117.f, 123.f });
 
-	auto dogs = findAll(dogDetector, video);
+	auto dogs = findAll(dogDetector, toArray(cap));
 	auto breed = findUnique(breedDetector, dogs);
 
-	String ouputPath = "C:/practice/CV-SUMMER-CAMP/data/output/";
-	std::vector<String> breedsLabels = readLabel("C:/practice/CV-SUMMER-CAMP/data/model/squeezenet1.1.labels");
 	std::ofstream file;
-	file.open(ouputPath + "breeds.txt");
-	for (const auto& image : breed) {
-		if (file.is_open()) {
-			file << image.id << std::endl;
-		}
-		imwrite(ouputPath + breedsLabels[image.id] + ".png", image.frame(image.obj.front().rect));
+	file.open(outputPath + "breeds.txt");
+	for (size_t i = 0; i < breed.size(); ++i) {
+		std::string name = labels[breed[i].id];
+		file << name << std::endl;
+		imwrite(outputPath + name + ".jpg", breed[i].frame(breed[i].rect));
 	}
 	file.close();
 
+	system("pause");
 	return 0;
 }
