@@ -4,7 +4,7 @@
 
 #include "tracking_by_matching.hpp"
 #include <iostream>
-
+#include <map>
 
 using namespace std;
 using namespace cv;
@@ -68,7 +68,7 @@ public:
         net_mean(net_mean),
         net_swapRB(net_swapRB)
     {
-        net = dnn::readNetFromCaffe(net_caffe_model_path, net_caffe_weights_path);
+        net = dnn::readNet(net_caffe_model_path, net_caffe_weights_path);
         if (net.empty())
             CV_Error(Error::StsError, "Cannot read Caffe net");
     }
@@ -139,6 +139,31 @@ createTrackerByMatchingWithFastDescriptor() {
     return tracker;
 }
 
+String classNames[20] = {
+| "background",
+"aeroplane",
+"bicycle",
+"bird",
+"boat",
+"bottle",
+"bus",
+"car",
+"cat",
+"chair",
+"cow",
+"diningtable",
+"dog",
+"horse"
+"motorbike",
+"person",
+"pottedplant",
+"sheep",
+"sofa",
+"train",
+"tvmonitor"
+};
+
+
 int main(int argc, char** argv) {
     CommandLineParser parser(argc, argv, keys);
     cv::Ptr<ITrackerByMatching> tracker = createTrackerByMatchingWithFastDescriptor();
@@ -150,6 +175,8 @@ int main(int argc, char** argv) {
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
 
+	//map<int, Scalar> ColorsID[] = { "" };
+
     if (video_name.empty() || detector_model.empty() || detector_weights.empty())
     {
         help();
@@ -160,7 +187,12 @@ int main(int argc, char** argv) {
     VideoCapture cap;
     cap.open(video_name);
     cap.set(CAP_PROP_POS_FRAMES, start_frame);
-
+	// Define the codec and create VideoWriter object.The output is stored in 'outcpp.avi' file.
+    // Define the fps to be equal to 10. Also frame size is passed.
+	Mat img;
+	cap >> img;
+	VideoWriter video("../../CV-SUMMER-CAMP/data/output.mp4", VideoWriter::fourcc('M', 'P', 'E', 'G'), 30, Size(img.rows,img.cols));
+	
     if (!cap.isOpened())
     {
         help();
@@ -175,7 +207,7 @@ int main(int argc, char** argv) {
     DnnObjectDetector detector(detector_model, detector_weights, desired_class_id);
 
     Mat frame;
-    namedWindow("Tracking by Matching", 1);
+    //namedWindow("Tracking by Matching", 1);
 
     int frame_counter = -1;
     int64 time_total = 0;
@@ -234,7 +266,7 @@ int main(int argc, char** argv) {
         }
 
         imshow("Tracking by Matching", frame);
-
+		video.write(frame);
         char c = (char)waitKey(2);
         if (c == 'q')
             break;

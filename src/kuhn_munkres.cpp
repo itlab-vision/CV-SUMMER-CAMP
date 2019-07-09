@@ -3,7 +3,8 @@
 #include <algorithm>
 #include <limits>
 #include <vector>
-
+#include <iostream>
+#include <limits>
 KuhnMunkres::KuhnMunkres() : n_() {}
 
 std::vector<size_t> KuhnMunkres::Solve(const cv::Mat& dissimilarity_matrix) {
@@ -34,7 +35,50 @@ std::vector<size_t> KuhnMunkres::Solve(const cv::Mat& dissimilarity_matrix) {
             }
         }
     }
+	
     return results;
+}
+
+std::vector<size_t> KuhnMunkres::BruteForce(const cv::Mat &dissimilarity_matrix) {
+	CV_Assert(dissimilarity_matrix.type() == CV_32F);
+	double min_val;
+	cv::minMaxLoc(dissimilarity_matrix, &min_val);
+	CV_Assert(min_val >= 0);
+
+	n_ = std::max(dissimilarity_matrix.rows, dissimilarity_matrix.cols); 
+	dm_ = cv::Mat(n_, n_, CV_32F, cv::Scalar(0));
+	marked_ = cv::Mat(n_, n_, CV_8S, cv::Scalar(0));
+	points_ = std::vector<cv::Point>(n_ * 2);
+
+	dissimilarity_matrix.copyTo(dm_(
+		cv::Rect(0, 0, dissimilarity_matrix.cols, dissimilarity_matrix.rows)));
+
+	std::vector<size_t> results(static_cast<size_t>(marked_.rows), static_cast<size_t>(-1));
+	float min = std::numeric_limits<float>::max(), sum = 0;
+	std::cout << dissimilarity_matrix << std::endl;
+	std::cout << dm_ << std::endl;
+	
+	std::vector<size_t> p;
+	for (int i = 1; i < dm_.rows + 1; i++) {
+		p.push_back(i - 1);
+	}
+	
+	// permutations
+	do {
+		for (int i = 0; i < dm_.rows; i++) {
+			sum += dm_.at<float>(i, p[i]);
+		}
+		if (sum <= min) {
+			min = sum;
+			results = p;
+		}
+		sum = 0;
+	} while (std::next_permutation(p.begin(), p.end()));
+	
+	for (int i = 0; i < results.size(); i++) {
+		std::cout << results[i] << std::endl;
+	}
+	return results;
 }
 
 void KuhnMunkres::TrySimpleCase() {
