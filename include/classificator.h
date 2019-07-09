@@ -21,13 +21,12 @@ public:
 class DnnClassificator:Classificator
 {
 private:
-	string pathLabels;
 	Net net;
 	int width;
 	int height;
 	Scalar mean;
 	bool swapRB;
 public:
-	DnnClassificator(string path_to_model, string path_to_config, string path_to_labels, int inputWidth, int inputHeight, Scalar mean, bool swapRG);
+	DnnClassificator(string path_to_model, string path_to_config, int inputWidth, int inputHeight, Scalar mean, bool swapRG);
 	Mat Classify(Mat image) override;
 };
