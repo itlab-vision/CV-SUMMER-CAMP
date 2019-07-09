@@ -150,6 +150,11 @@ int main(int argc, char** argv) {
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
 
+	video_name = "C:/Users/temp2019/Desktop/lindigas/data/catdog.mp4";
+	detector_model = "C:/Users/temp2019/Desktop/lindigas/data/mobilenet-ssd.prototxt" ;
+	detector_weights = "C:/Users/temp2019/Desktop/lindigas/data/mobilenet-ssd.caffemodel";
+
+
     if (video_name.empty() || detector_model.empty() || detector_weights.empty())
     {
         help();
