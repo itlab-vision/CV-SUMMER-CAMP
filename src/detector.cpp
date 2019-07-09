@@ -19,39 +19,39 @@ DnnDetector::DnnDetector(String _modelPath, String _configPath, String _labelsPa
 }
 
 
-vector<DetectedObject> DnnDetector::Detect(Mat image) {
+tbm::TrackedObjects DnnDetector::Detect(Mat image, int frame_idx) {
 
 	int width_source = image.cols; 
 	int height_source = image.rows; // Размеры исходного изображения
 
-	Mat inputTensor;
-	vector<DetectedObject> objects;
-	blobFromImage(image, inputTensor, scale, Size(inputWidth, inputHeight), mean, swapRB, false);
+	Mat resized_frame;
+	resize(image, resized_frame, Size(inputWidth, inputHeight));
 
+
+	Mat inputTensor;
+	tbm::TrackedObjects objects;
+	blobFromImage(resized_frame, inputTensor, scale, Size(inputWidth, inputHeight), mean, swapRB, false);
 
 
 	net.setInput(inputTensor);
 	Mat objectsProbability = net.forward().reshape(1,1);
 	int objectsNum = objectsProbability.cols / 7;
-
-	/* Getting class labels*/
-	std::map<int, string> classes = initializeClasses("C:/Users/rngtn/Documents/cv_summer_school/CV-SUMMER-CAMP/data/mobilenet-ssd/caffe/object_detection_classes.txt");
+	cout << objectsProbability << endl;
 
 
 	for (int i = 0; i < objectsNum; i++) {
-		DetectedObject obj;
-		obj.uuid = objectsProbability.at<float>(0, 1 + i * 7);
-		obj.score = objectsProbability.at<float>(0, 2 + i * 7);
-		obj.Left = objectsProbability.at<float>(0, 3 + i * 7) * width_source;
-		obj.Top = objectsProbability.at<float>(0, 4 + i * 7) * height_source;
-		obj.Right = objectsProbability.at<float>(0, 5 + i * 7) * width_source;
-		obj.Bottom = objectsProbability.at<float>(0, 6 + i * 7) * height_source;
+		int uuid = objectsProbability.at<float>(0, 1 + i * 7);
+		double score = objectsProbability.at<float>(0, 2 + i * 7);
+		int left = objectsProbability.at<float>(0, 3 + i * 7) * width_source;
+		int bottom = objectsProbability.at<float>(0, 4 + i * 7) * height_source;
+		int right = objectsProbability.at<float>(0, 5 + i * 7) * width_source;
+		float temp = objectsProbability.at<float>(0, 6 + i * 7);
+		int top = objectsProbability.at<float>(0, 6 + i * 7) * height_source;
 
+		Rect rect(left, bottom, (right - left), (top - bottom));
+		tbm::TrackedObject cur_obj(rect, score, frame_idx, uuid, -1);
 
-
-		obj.classname = classes[obj.uuid];
-
-		objects.push_back(obj);
+		objects.push_back(cur_obj);
 	}
 	return objects;
 }

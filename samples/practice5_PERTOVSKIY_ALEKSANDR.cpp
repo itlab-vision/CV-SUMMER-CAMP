@@ -2,11 +2,13 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/dnn.hpp>
 #include <random>
+#include <iostream>
+
+
 #include "detector.h"
 #include "tracking_by_matching.hpp"
 #include "label_parser.h"
-#include <iostream>
-
+#include "classificator.h"
 
 using namespace std;
 using namespace cv;
@@ -19,8 +21,13 @@ static const char* keys =
 "{detector_model   | | Path to detector's Caffe model   }"
 "{detector_weights | | Path to detector's Caffe weights }"
 "{desired_classes |-1| The desired classes that should be tracked }"
-"{labels_path      | | Path to detector's labels        }"
+"{detector_labels_path  | | Path to detector's labels        }"
+"{classificator_labels_path | | Path to classificator's labels        }"
+"{classificator_model  | | Path to classificator's model        }"
+"{classificator_weight | | Path to classificator's weights        }"
 };
+
+
 
 static void help()
 {
@@ -48,8 +55,20 @@ static void help()
 }
 
 
-const std::map<String, Scalar> colours = { {"cat", Scalar(0, 36, 255)},
-											{"dog", Scalar(0, 255, 0)} };
+
+struct params {
+	String model_path;
+	String config_path;
+	String label_path;
+	Scalar mean;
+	double scale;
+	bool swapRB;
+	int width;
+	int height;
+};
+
+const std::map<String, Scalar> colours = { { "cat", Scalar(0, 36, 255) },
+{ "dog", Scalar(0, 255, 0) } };
 
 vector<int> parseClassesString(String inputClasses) {
 	vector<int> classes;
@@ -75,87 +94,6 @@ vector<int> parseClassesString(String inputClasses) {
 
 cv::Ptr<ITrackerByMatching> createTrackerByMatchingWithFastDescriptor();
 
-class DnnObjectDetector
-{
-public:
-	DnnObjectDetector(const String& net_caffe_model_path, const String& net_caffe_weights_path,
-		vector<int> desired_classes,
-		float confidence_threshold = 0.2,
-		//the following parameters are default for popular MobileNet_SSD caffe model
-		const String& net_input_name = "data",
-		const String& net_output_name = "detection_out",
-		double net_scalefactor = 0.007843,
-		const Size& net_size = Size(300, 300),
-		const Scalar& net_mean = Scalar(127.5, 127.5, 127.5),
-		bool net_swapRB = false)
-		:desired_classes(desired_classes),
-		confidence_threshold(confidence_threshold),
-		net_input_name(net_input_name),
-		net_output_name(net_output_name),
-		net_scalefactor(net_scalefactor),
-		net_size(net_size),
-		net_mean(net_mean),
-		net_swapRB(net_swapRB)
-	{
-		net = dnn::readNet(net_caffe_model_path, net_caffe_weights_path);
-		if (net.empty())
-			CV_Error(Error::StsError, "Cannot read Caffe net");
-	}
-	TrackedObjects detect(const cv::Mat& frame, int frame_idx)
-	{
-		Mat resized_frame;
-		resize(frame, resized_frame, net_size);
-		Mat inputBlob = cv::dnn::blobFromImage(resized_frame, net_scalefactor, net_size, net_mean, net_swapRB);
-
-		net.setInput(inputBlob, net_input_name);
-		Mat detection = net.forward(net_output_name);
-		Mat detection_as_mat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
-
-		TrackedObjects res;
-		for (int i = 0; i < detection_as_mat.rows; i++)
-		{
-			float cur_confidence = detection_as_mat.at<float>(i, 2);
-			int cur_class_id = static_cast<int>(detection_as_mat.at<float>(i, 1));
-			int x_left = static_cast<int>(detection_as_mat.at<float>(i, 3) * frame.cols);
-			int y_bottom = static_cast<int>(detection_as_mat.at<float>(i, 4) * frame.rows);
-			int x_right = static_cast<int>(detection_as_mat.at<float>(i, 5) * frame.cols);
-			int y_top = static_cast<int>(detection_as_mat.at<float>(i, 6) * frame.rows);
-			int desired_cl_size = desired_classes.size();
-
-			Rect cur_rect(x_left, y_bottom, (x_right - x_left), (y_top - y_bottom));
-
-			if (cur_confidence < confidence_threshold)
-				continue;
-
-			int flagIsDesired = false;
-			for (int j = 0; j < desired_cl_size; j++)
-			{
-				if ((desired_classes[j] > 0) && (cur_class_id == desired_classes[j]))
-					flagIsDesired = true;
-
-			}
-			if (!flagIsDesired) continue;
-			//clipping by frame size
-			cur_rect = cur_rect & Rect(Point(), frame.size());
-			if (cur_rect.empty())
-				continue;
-
-			TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, cur_class_id, -1 );
-			res.push_back(cur_obj);
-		}
-		return res;
-	}
-private:
-	cv::dnn::Net net;
-	vector<int> desired_classes;
-	float confidence_threshold;
-	String net_input_name;
-	String net_output_name;
-	double net_scalefactor;
-	Size net_size;
-	Scalar net_mean;
-	bool net_swapRB;
-};
 
 cv::Ptr<ITrackerByMatching>
 createTrackerByMatchingWithFastDescriptor() {
@@ -175,6 +113,26 @@ createTrackerByMatchingWithFastDescriptor() {
 	return tracker;
 }
 
+
+// return classname and confidence
+std::pair<String, double> classifyDog(const Mat& image, params squez_params) {
+	std::map<int, String> classes = initializeClasses(squez_params.label_path);
+	DnnClassificator squeez_cl(squez_params.model_path,
+		squez_params.config_path,
+		squez_params.label_path,
+		squez_params.width,
+		squez_params.height,
+		squez_params.mean,
+		squez_params.swapRB);
+	Mat probReshaped = squeez_cl.Classify(image);
+	double confidence;
+	Point classPoint;
+
+	minMaxLoc(probReshaped, 0, &confidence, 0, &classPoint);
+	return std::make_pair(classes[classPoint.x], confidence);
+
+}
+
 int main(int argc, char** argv) {
 
 	CommandLineParser parser(argc, argv, keys);
@@ -183,20 +141,40 @@ int main(int argc, char** argv) {
 	String video_name = parser.get<String>("video_name");
 	int start_frame = parser.get<int>("start_frame");
 	int frame_step = parser.get<int>("frame_step");
-	String detector_model = parser.get<String>("detector_model");
-	String detector_weights = parser.get<String>("detector_weights");
 	String desired_classes = parser.get<String>("desired_classes");
-	String labels_path = parser.get<String>("labels_path");
+
+	params mobilenet_params = {
+		parser.get<String>("detector_model"),
+		parser.get<String>("detector_weights"),
+		parser.get<String>("detector_labels_path"),
+		Scalar(127.5, 127.5, 127.5), // mean
+		0.007843, // scale
+		false, // swapRB
+		300, // width
+		300 // height
+	};
+
+	params squeeze_params = {
+		parser.get<String>("classificator_model"),
+		parser.get<String>("classificator_weight"),
+		parser.get<String>("classificator_labels_path"),
+		Scalar(104.0, 117.0, 123.0), // mean
+		1, // scale
+		false, // swapRB
+		227, // width
+		227 // height
+	};
+	
 
 
 
 	vector<int> classes = parseClassesString(desired_classes);
 
-	if (video_name.empty() || detector_model.empty() || detector_weights.empty())
-	{
-		help();
-		return -1;
-	}
+	//if (video_name.empty() || mobilenet_params.model_path.empty() || mobilenet_params.config_path.empty())
+	//{
+	//	help();
+	//	return -1;
+	//}
 
 	//open the capture
 	VideoCapture cap;
@@ -212,10 +190,16 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	// If you use the popular MobileNet_SSD detector, the default parameters may be used.
-	// Otherwise, set your own parameters (net_mean, net_scalefactor, etc).
-	DnnObjectDetector detector(detector_model, detector_weights, classes);
-	//DnnDetector myDetector(detector_model, detector_weights, labels, 300, 300, 0.007843, Scalar(127.5, 127.5, 127.5), false);
+
+	DnnDetector detector(mobilenet_params.model_path,
+		mobilenet_params.config_path, 
+		mobilenet_params.label_path,
+		mobilenet_params.width,
+		mobilenet_params.height, 
+		mobilenet_params.scale, 
+		mobilenet_params.mean,
+		mobilenet_params.swapRB);
+	
 
 	Mat frame;
 	namedWindow("Tracking by Matching", 1);
@@ -248,9 +232,9 @@ int main(int argc, char** argv) {
 
 		int64 frame_time = getTickCount();
 
-		TrackedObjects detections = detector.detect(frame, frame_counter);
+		TrackedObjects detections = detector.Detect(frame, frame_counter);
 
-		
+
 
 		// timestamp in milliseconds
 		uint64_t cur_timestamp = static_cast<uint64_t>(1000.0 / 30 * frame_counter);
@@ -262,8 +246,6 @@ int main(int argc, char** argv) {
 		// Drawing colored "worms" (tracks).
 		frame = tracker->drawActiveTracks(frame);
 
-
-		// Drawing all detected objects on a frame by BLUE COLOR
 		for (const auto &detection : detections) {
 			cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
 		}
@@ -271,19 +253,20 @@ int main(int argc, char** argv) {
 		// Drawing tracked detections only by RED color and print ID and detection
 		// confidence level.
 
-		std::map<int, string> classNames = initializeClasses(labels_path);
-		srand(time(NULL));
+
+
 		for (const auto &detection : tracker->trackedDetections()) {
-			const String className = classNames[detection.class_id];
-			Scalar colour = colours.at(className);
-			cv::rectangle(frame, detection.rect, colour, 3);
-			std::string text = std::to_string(detection.object_id) +
-				" conf: " + std::to_string(detection.confidence);
-			std::string classInfo = "class: " + className;
-			cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-				1.0, colour, 3);
-			cv::putText(frame, classInfo, Point(detection.rect.x ,detection.rect.y + detection.rect.height), cv::FONT_HERSHEY_COMPLEX,
-				1.0, colour, 3);
+			std::pair<cv::String, double> dogClass;
+			if (detection.class_id != 12) {
+				dogClass = classifyDog(frame, squeeze_params);
+				String text = "Dog class: " + dogClass.first + ". Score: " + std::to_string(dogClass.second);
+				cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
+				cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
+					1.0, Scalar(0, 0, 255));
+			}else {
+				continue;
+			}
+
 		}
 
 		imshow("Tracking by Matching", frame);

@@ -8,6 +8,7 @@
 
 #include "detectedobject.h"
 #include "label_parser.h"
+#include "tracking_by_matching.hpp"
 
 
 using namespace cv;
@@ -18,7 +19,7 @@ class Detector
 {
 
 public:
-    virtual vector<DetectedObject> Detect(Mat image) = 0 {}
+	virtual tbm::TrackedObjects Detector::Detect(Mat image, int frame_idx) = 0;
 };
 
 
@@ -35,5 +36,5 @@ private:
 	Net net;
 public:
 	DnnDetector(String _modelPath, String _configPath, String _labelsPath, int _inputWidth, int _inputHeight, double _scale, Scalar _mean, bool _swapRB);
-	vector<DetectedObject> Detect(Mat image);
+	tbm::TrackedObjects DnnDetector::Detect(Mat image, int frame_idx);
 };
