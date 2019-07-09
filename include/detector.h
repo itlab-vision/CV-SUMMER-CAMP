@@ -22,6 +22,7 @@ public:
 class DnnDetector : public Detector {
 
 private:
+	Net net;
 	string model;
 	string confing;
 	string labels;

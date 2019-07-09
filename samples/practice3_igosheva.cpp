@@ -15,8 +15,11 @@ const char* cmdAbout =
     "own doing-something-cool applications.";
 
 const char* cmdOptions =
-    "{ i image        |        | image to process         }"
-    "{ h ? help usage |        | print help message       }";
+"{ i image        |        | image to process         }"
+"{ m model_path        |        | image to process         }"
+"{ c config_path        |        | image to process         }"
+"{ l label_path        |        | image to process         }"
+    "{ q ? help usage |        | print help message       }";
 
 
 int main(int argc, const char** argv) {
@@ -32,10 +35,10 @@ int main(int argc, const char** argv) {
 
   // Do something cool.
   
-  String imgName(parser.get<String>("image")); 
-  string model(parser.get<string>("model_path"));
-  string config(parser.get<string>("config_path"));
-  string labels(parser.get<string>("label_path"));
+  string imgName = parser.get<string>("image"); 
+  string model = parser.get<string>("model_path");
+  string config = parser.get<string>("config_path");
+  string labels = parser.get<string>("label_path");
 
   model = "C:/Users/temp2019/Desktop/lindigas/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel";
   config = "C:/Users/temp2019/Desktop/lindigas/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.prototxt";

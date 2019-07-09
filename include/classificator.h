@@ -33,7 +33,7 @@ private:
 
 public:
 	DnnClassificator(string caffemodel1, string prototxt1, string labels1, int inputWidth1, int inputHeight1, Scalar mean1, bool swapRB1, float scale);
-	Mat Classify(Mat image) = 0;
+	Mat Classify(Mat image);
 
 };
 
