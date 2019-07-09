@@ -105,7 +105,7 @@ public:
 
             if (cur_confidence < confidence_threshold)
                 continue;
-            if ((desired_class_ids.size() >= 0) &&
+            if ((desired_class_ids.size() > 0) &&
                 find(desired_class_ids.begin(), desired_class_ids.end(), cur_class_id) == desired_class_ids.end())
                 continue;
 
@@ -233,14 +233,23 @@ int main(int argc, char** argv) {
             cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
         }
 
-        // Drawing tracked detections only by RED color and print ID and detection
-        // confidence level.
+        // Drawing tracked detections only and printing ID and detection confidence level.
         for (const auto &detection : tracker->trackedDetections()) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
-            std::string text = std::to_string(detection.object_id) +
-                " conf: " + std::to_string(detection.confidence);
-            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-                1.0, cv::Scalar(0, 0, 255), 3);
+            ostringstream confidencePercents;
+            confidencePercents.precision(2);
+            confidencePercents << fixed << detection.confidence * 100;
+
+            srand(detection.object_id);
+            int r = (rand() % 150) + 50;
+            int g = (rand() % 150) + 50;
+            int b = (rand() % 150) + 50;
+            Scalar color = Scalar(r, g, b);
+
+            cv::rectangle(frame, detection.rect, color, 3);
+
+            string text = "id " + to_string(detection.object_id) + " (" + confidencePercents.str() + "%)";
+            putText(frame, text, Point(detection.rect.x, detection.rect.y - 10), FONT_HERSHEY_DUPLEX, 1.2, Scalar(255, 255, 255), 3);
+            putText(frame, text, Point(detection.rect.x, detection.rect.y - 10), FONT_HERSHEY_DUPLEX, 1.2, color, 1);
         }
 
         imshow("Tracking by Matching", frame);
