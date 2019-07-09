@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 	//Image classification
 	
 	dnn_class.Classify(image);
-	minMaxLoc(image,100,100,100,100);
+	//minMaxLoc(image,100,100,100,100);
 	//Show result
 	imshow("image", image);
 	waitKey();
