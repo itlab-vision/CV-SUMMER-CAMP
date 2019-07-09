@@ -11,8 +11,6 @@ using namespace std;
 using namespace cv;
 using namespace cv::dnn;
 
-//bool debug = true;
-
 const char* cmdAbout =
     "This is an empty application that can be treated as a template for your "
     "own doing-something-cool applications.";
@@ -34,13 +32,33 @@ int main(int argc, const char** argv) {
   }
 
   String imgName(parser.get<String>("image"));
-
+  //String imgName = "C:\\Jerry\\CV-SUMMER-CAMP\\data\\unn_neuromobile.jpg";
   // Do something cool. 
   Mat image = imread(imgName);
 
-  DnnDetector detector;
-  detector.Detect(image);
 
+  bool debug = false;
+
+  if (debug)
+  {
+	  imshow("123", image);
+	  waitKey();
+  }
+
+  DnnDetector detector;
+
+  vector<DetectedObject> result = detector.Detect(image);
+
+  for (vector<DetectedObject>::iterator i = result.begin(); i != result.end(); i++)
+  {
+	  Point2f leftTop((*i).Left, (*i).Top);
+	  Point2f rightBottom((*i).Right, (*i).Bottom);
+	  Scalar scal(0, 0, 255);
+	  rectangle(image, leftTop, rightBottom, scal, 5);
+  }
+
+  imshow("Detected objects", image);
+  waitKey();
   /*Mat result = detector.Detect(image);
 
   Point classIdPoint;
@@ -57,8 +75,6 @@ int main(int argc, const char** argv) {
 	  cout << "matrix: " << result.reshape(1, 1) << endl;
 
   cout << "probability: " << probability << ", class: " << classId << endl;*/
-
-  system("pause");
 
   return 0;
 }

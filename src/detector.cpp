@@ -1,6 +1,5 @@
 #include "detector.h"
 
-bool debug = true;
 
 DnnDetector::DnnDetector()
 {
@@ -19,31 +18,40 @@ DnnDetector::DnnDetector()
 
 vector<DetectedObject> DnnDetector::Detect(Mat image)
 {
-	double scale = 127.50223128904757;
+	double scale = 1.0/ 127.50223128904757;
 
 	Mat inputTensor;
 	blobFromImage(image, inputTensor, scale, Size(inputWidth, inputHeight), mean, swapRB /* ,0 ,0 */);
 	net.setInput(inputTensor);
 	Mat blob = net.forward();
 
-	blob = blob.reshape(1, 100);
 	
-	vector<DetectedObject> result;
+	Mat temp = blob.reshape(1, 1); //чтобы понять ко скольки строкам приводить оригинальный блоб
+	int columns = temp.cols / 7;
+
+	bool debug = true;
+	blob = blob.reshape(1, columns);
+	
+	vector<DetectedObject> result;	
+	if (debug)
+		cout << blob << endl;
+
+	
 	for (int i = 0; i < blob.rows; ++i)
 	{
 		DetectedObject temp;
-		temp.Left = blob.cols;
-			top
-			right
-			bottom
-		
+		temp.Left = blob.at<float>(i, 3) * image.cols;
+		temp.Bottom = blob.at<float>(i, 4) * image.rows;
+		temp.Right = blob.at<float>(i, 5) * image.cols;
+		temp.Top = blob.at<float>(i, 6) * image.rows;
+		result.push_back(temp);
 	}
 		
 
-	
-
 	if (debug)
-		cout << blob << endl;
+		cout << "result: Left:"/*1*/ << result[0].Left << " Bottom:" << result[0].Bottom << " Right:" << result[0].Right << "Top:" << result[0].Top << endl;
+
+	
 
 
 	//for (int i = 0; i < 100; i++)
@@ -64,5 +72,5 @@ vector<DetectedObject> DnnDetector::Detect(Mat image)
 	int classId = classIdPoint.x;
 	*/
 
-	return vector<DetectedObject>();
+	return result;
 }
