@@ -2,11 +2,13 @@
 #include <string>
 
 struct DetectedObject
-{
-    int Left;
-    int Right;
-    int Top;
-    int Bottom;
-    int uuid;
-    std::string classname;
+{	
+	int classid;
+	std::string className;
+	float confidence;
+    float Left;
+    float Right;
+    float Top;
+	float Bottom;
+    
 };
