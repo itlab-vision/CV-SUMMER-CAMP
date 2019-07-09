@@ -3,10 +3,20 @@
 
 struct DetectedObject
 {
-    int Left;
-    int Right;
-    int Top;
-    int Bottom;
+    float Left;
+	float Top;
+    float Right;    
+    float Bottom;
     int uuid;
     std::string classname;
 };
+
+/*
+1
+2
+3
+left
+top
+right
+bottom
+*/
