@@ -11,12 +11,13 @@ using namespace cv;
 using namespace cv::tbm;
 
 static const char* keys =
-{ "{video_name       | | video name                       }"
+{ "{video_name     | | video name                       }"
 "{start_frame      |0| Start frame                      }"
 "{frame_step       |1| Frame step                       }"
 "{detector_model   | | Path to detector's Caffe model   }"
 "{detector_weights | | Path to detector's Caffe weights }"
 "{desired_class_id |-1| The desired class that should be tracked }"
+"{class_id         |  | vector      }"
 };
 
 static void help()
@@ -72,7 +73,7 @@ public:
         if (net.empty())
             CV_Error(Error::StsError, "Cannot read Caffe net");
     }
-    TrackedObjects detect(const cv::Mat& frame, int frame_idx)
+    TrackedObjects detect(const cv::Mat& frame, int frame_idx, vector<int> class_id)
     {
         Mat resized_frame;
         resize(frame, resized_frame, net_size);
@@ -104,8 +105,12 @@ public:
             if (cur_rect.empty())
                 continue;
 
-            TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1);
-            res.push_back(cur_obj);
+			for (int i = 0; i < class_id.size(); i++)
+				if (cur_class_id == class_id[i])
+				{
+					TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1, cur_class_id);
+					res.push_back(cur_obj);
+				}
         }
         return res;
     }
@@ -149,6 +154,17 @@ int main(int argc, char** argv) {
     String detector_model = parser.get<String>("detector_model");
     String detector_weights = parser.get<String>("detector_weights");
     int desired_class_id = parser.get<int>("desired_class_id");
+	vector<int> class_id = parser.get<vector<int>>("class_id");
+
+	String label[21] = { "background", "aeroplane", "bicycle", "bird",
+	  "boat","bottle", "bus",  "car", "cat", "chair", "cow",
+	  "diningtable",  "dog", "horse", "motorbike", "person",
+	  "pottedplant", "sheep",  "sofa", "train", "tvmonitor" };
+
+	Scalar color[21] = { (255, 255, 0), (0, 255, 0), (128, 0, 128), (0, 0, 128),
+	  (0, 255, 255),(255, 0, 255), (128, 0, 0),  (128, 128, 0), (255, 0, 0), (210, 105, 30), (255, 218, 185),
+	  (0, 255, 127),  (188, 143, 143), (255, 250, 240), (250, 128, 114), (32, 178, 170),
+	  (176, 224, 230), (244, 164, 96),  (127, 255, 212), (220, 20, 60), (85, 107, 47) };
 
     if (video_name.empty() || detector_model.empty() || detector_weights.empty())
     {
@@ -205,7 +221,7 @@ int main(int argc, char** argv) {
 
         int64 frame_time = getTickCount();
 
-        TrackedObjects detections = detector.detect(frame, frame_counter);
+        TrackedObjects detections = detector.detect(frame, frame_counter, class_id);
 
         // timestamp in milliseconds
         uint64_t cur_timestamp = static_cast<uint64_t>(1000.0 / 30 * frame_counter);
@@ -225,12 +241,13 @@ int main(int argc, char** argv) {
 
         // Drawing tracked detections only by RED color and print ID and detection
         // confidence level.
-        for (const auto &detection : tracker->trackedDetections()) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
-            std::string text = "Class: " + std::to_string(detection.object_id) +
+		for (const auto &detection : tracker->trackedDetections()) 
+		{
+            cv::rectangle(frame, detection.rect, color[detection.classid], 2);
+            std::string text = "Object " + std::to_string(detection.object_id) + " : " + label[detection.classid] +
                 " Confidence: " + std::to_string(detection.confidence);
-            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_SIMPLEX,
-                1.0, cv::Scalar(0, 0, 255), 2);
+            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_PLAIN,
+                1.0, cv::Scalar(0, 0, 255), 1);
         }
 
         imshow("Tracking by Matching", frame);
