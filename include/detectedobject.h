@@ -8,5 +8,6 @@ struct DetectedObject
     int Top;
     int Bottom;
     int uuid;
+	double score;
     std::string classname;
 };

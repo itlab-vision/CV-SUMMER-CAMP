@@ -50,7 +50,7 @@ class DnnObjectDetector
 {
 public:
     DnnObjectDetector(const String& net_caffe_model_path, const String& net_caffe_weights_path,
-        int desired_class_id = -1,
+		vector<int> desired_class_id = {-1},
         float confidence_threshold = 0.2,
         //the following parameters are default for popular MobileNet_SSD caffe model
         const String& net_input_name = "data",
@@ -96,14 +96,26 @@ public:
 
             if (cur_confidence < confidence_threshold)
                 continue;
-            if ((desired_class_id >= 0) && (cur_class_id != desired_class_id))
-                continue;
+			if (desired_class_id[0] >= 0)
+			{
+				bool coincidence=false;
+				for (int j : desired_class_id)
+				{
+					if (cur_class_id == j) {
+						coincidence = true;
+						break;
+					}
+				}
+				if (!coincidence)
+				{
+					continue;
+				}
+			}
 
             //clipping by frame size
             cur_rect = cur_rect & Rect(Point(), frame.size());
             if (cur_rect.empty())
                 continue;
-
             TrackedObject cur_obj(cur_rect, cur_confidence, frame_idx, -1);
             res.push_back(cur_obj);
         }
@@ -111,7 +123,7 @@ public:
     }
 private:
     cv::dnn::Net net;
-    int desired_class_id;
+    vector<int> desired_class_id;
     float confidence_threshold;
     String net_input_name;
     String net_output_name;
@@ -140,15 +152,27 @@ createTrackerByMatchingWithFastDescriptor() {
 }
 
 int main(int argc, char** argv) {
-    CommandLineParser parser(argc, argv, keys);
-    cv::Ptr<ITrackerByMatching> tracker = createTrackerByMatchingWithFastDescriptor();
+	CommandLineParser parser(argc, argv, keys);
+	cv::Ptr<ITrackerByMatching> tracker = createTrackerByMatchingWithFastDescriptor();
 
-    String video_name = parser.get<String>("video_name");
-    int start_frame = parser.get<int>("start_frame");
-    int frame_step = parser.get<int>("frame_step");
-    String detector_model = parser.get<String>("detector_model");
-    String detector_weights = parser.get<String>("detector_weights");
-    int desired_class_id = parser.get<int>("desired_class_id");
+	String video_name = parser.get<String>("video_name");
+	int start_frame = parser.get<int>("start_frame");
+	int frame_step = parser.get<int>("frame_step");
+	String detector_model = parser.get<String>("detector_model");
+	String detector_weights = parser.get<String>("detector_weights");
+	string class_ids = parser.get<string>("desired_class_id");
+	vector<int> desired_class_id;
+	for (int i = 0; i<class_ids.length();i++)
+	{
+		static int t = 0;
+		if (class_ids[i] == ' ')
+		{
+			desired_class_id.push_back(stoi(string(class_ids,t,i-t)));
+			t = i;
+		}
+
+	}
+
 
     if (video_name.empty() || detector_model.empty() || detector_weights.empty())
     {
@@ -220,17 +244,17 @@ int main(int argc, char** argv) {
 
         // Drawing all detected objects on a frame by BLUE COLOR
         for (const auto &detection : detections) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 3);
+            cv::rectangle(frame, detection.rect, cv::Scalar(255, 0, 0), 1);
         }
 
         // Drawing tracked detections only by RED color and print ID and detection
         // confidence level.
         for (const auto &detection : tracker->trackedDetections()) {
-            cv::rectangle(frame, detection.rect, cv::Scalar(0, 0, 255), 3);
+            cv::rectangle(frame, detection.rect, cv::Scalar(0, 255, 0), 1);
             std::string text = std::to_string(detection.object_id) +
                 " conf: " + std::to_string(detection.confidence);
-            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX,
-                1.0, cv::Scalar(0, 0, 255), 3);
+            cv::putText(frame, text, detection.rect.tl(), cv::FONT_HERSHEY_COMPLEX_SMALL,
+                1.0, cv::Scalar(0, 0, 255), 1);
         }
 
         imshow("Tracking by Matching", frame);
