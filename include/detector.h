@@ -17,3 +17,18 @@ class Detector
 public:
     virtual vector<DetectedObject> Detect(Mat image) = 0 {}
 };
+
+class DnnDetector :public Detector
+{private:
+	String path_to_model;
+	String path_to_config;
+	String path_to_lables;
+	Size spatial_size=Size(300,300);
+	double scale = 0.007843;
+	Scalar mean=Scalar(127.5, 127.5, 127.5);
+	bool swapRB=false;
+	Net net;
+public:
+	DnnDetector(String path_to_model, String path_to_config, String path_to_lables);
+	vector<DetectedObject> Detect(Mat image);
+};
