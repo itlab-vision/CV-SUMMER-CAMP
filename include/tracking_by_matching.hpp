@@ -25,15 +25,17 @@ struct CV_EXPORTS TrackedObject {
     double confidence;   ///< Detection confidence level (-1 if N/A).
     int frame_idx;       ///< Frame index where object was detected (-1 if N/A).
     int object_id;       ///< Unique object identifier (-1 if N/A).
-    uint64_t timestamp;  ///< Timestamp in milliseconds.
+    uint64_t timestamp;///< Timestamp in milliseconds.
+	int classid;
 
     ///
     /// \brief Default constructor.
     ///
-    TrackedObject()
-        : confidence(-1),
-        frame_idx(-1),
-        object_id(-1),
+	TrackedObject()
+		: confidence(-1),
+		frame_idx(-1),
+		object_id(-1),
+		classid(-1),
         timestamp(0) {}
 
     ///
@@ -43,12 +45,13 @@ struct CV_EXPORTS TrackedObject {
     /// \param frame_idx Index of frame.
     /// \param object_id Object ID.
     ///
-    TrackedObject(const cv::Rect &rect, float confidence, int frame_idx,
-                  int object_id)
-        : rect(rect),
-        confidence(confidence),
-        frame_idx(frame_idx),
-        object_id(object_id),
+	TrackedObject(const cv::Rect &rect, float confidence, int frame_idx,
+		int object_id, int classid)
+		: rect(rect),
+		confidence(confidence),
+		frame_idx(frame_idx),
+		object_id(object_id),
+		classid(classid),
         timestamp(0) {}
 };
 
