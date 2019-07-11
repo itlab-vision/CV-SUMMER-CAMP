@@ -19,6 +19,7 @@ const char* cmdOptions =
 
 int main(int argc, char** argv)
 {
+	
     // Process input arguments
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
@@ -35,17 +36,18 @@ int main(int argc, char** argv)
     }
     
     // Load image
-    String imgName(parser.get<String>("image"));
-
-    
+ 
     // Filter image
 
+int width = parser.get<int>("width");
+	int height = parser.get<int>("height");
+   String imgName(parser.get<String>("image"));
 
-    // Show image
-    
-    
-    
-    
-    
-    return 0;
+	cv:Mat image = cv::imread(imgName);
+    Filter* f = new GrayFilter();
+   Filter* G = new ResizeFilter(width, height);
+   cv::namedWindow("My image", cv::WINDOW_NORMAL);
+   cv::imshow("My image", G->ProcessImage(image));
+   cv::waitKey();
+   return 0;
 }

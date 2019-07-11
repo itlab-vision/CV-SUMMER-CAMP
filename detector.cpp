@@ -1,13 +1,13 @@
 #include "detector.h"
-DnnDetector::DnnDetector(string modelPath, string configPath, string labelsPath/*, int width, int height, Scalar mean, bool swapRB*/) {
+DnnDetector::DnnDetector(string modelPath, string configPath, string labelsPath, int width, int height, Scalar mean, bool swapRB) {
 	this->modelPath = modelPath;
 	this->configPath = configPath;
 	this->labelsPath = labelsPath;
-	/*this->width = width;
+	this->width = width;
 	this->height = height;
 	this->labelsPath = labelsPath;
 	this->mean = mean;
-	this->swapRB = swapRB;*/
+	this->swapRB = swapRB;
 }
 
 vector<DetectedObject> DnnDetector::Detect(Mat mat) {
