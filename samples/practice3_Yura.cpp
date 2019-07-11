@@ -47,8 +47,8 @@ int main(int argc, const char** argv) {
 	  cout << classes << " " << confidence << endl;
 	  rectangle(image, rect, Scalar(0, 255, 0), 1, 1, 0);
 
-	  putText(image, classes, Size(a.Left, a.Bottom - 20), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(0, 255, 255), 1, 0);
-	  putText(image, confidence, Size(a.Left, a.Bottom - 2), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(10, 99, 255), 1, 0);
+	  putText(image, classes, Size(a.Left, a.Bottom - 200), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(0, 255, 255), 1, 0);
+	  putText(image, confidence, Size(a.Left, a.Bottom - 20), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(10, 99, 255), 1, 0);
   }
   imshow("detecting", image);
   waitKey();
