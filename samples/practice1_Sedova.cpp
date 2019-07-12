@@ -4,7 +4,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-#include "filter.h"
+#include "filter_SedovaSasha.h"
 
 using namespace cv;
 using namespace std;
@@ -36,16 +36,18 @@ int main(int argc, char** argv)
     
     // Load image
     String imgName(parser.get<String>("image"));
-
-    
+	String path_image = parser.get<String>("i");
+	Mat image = cv::imread(path_image);
+	GrayFilter g1;
+	ResizeFilter r1(200,200);
     // Filter image
-
-
+	Mat GImage = g1.ProcessImage(image);
+	Mat RImage = r1.ProcessImage(image);
     // Show image
-    
-    
-    
-    
+	imshow("Gray", GImage);
+	imshow("Image", image);
+	imshow("Resize", RImage);
+	waitKey();
     
     return 0;
 }
