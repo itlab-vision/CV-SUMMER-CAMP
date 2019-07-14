@@ -22,6 +22,7 @@ public:
 	
 };
 
+
 class ResizeFilter : Filter
 {
 private:
@@ -32,4 +33,4 @@ public:
 	
     Mat ProcessImage(Mat image);
 	
-};
+};	
