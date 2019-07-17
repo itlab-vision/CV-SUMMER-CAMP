@@ -37,12 +37,10 @@ int main(int argc, char** argv)
     // Load image
     String imgName(parser.get<String>("image"));
 
-    
-    // Filter image
-
-
+	// Filter image
+	
     // Show image
-    
+	
     
     
     
