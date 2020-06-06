@@ -26,7 +26,7 @@ public:
     /// column for row.
     ///
     std::vector<size_t> Solve(const cv::Mat &dissimilarity_matrix);
-
+	std::vector<size_t> BruteForce(const cv::Mat &dissimilarity_matrix);
 private:
     static constexpr int kStar = 1;
     static constexpr int kPrime = 2;
@@ -41,6 +41,7 @@ private:
     int n_;
 
     void TrySimpleCase();
+
     bool CheckIfOptimumIsFound();
     cv::Point FindUncoveredMinValPos();
     void UpdateDissimilarityMatrix(float val);

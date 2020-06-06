@@ -680,8 +680,8 @@ void TrackerByMatching::SolveAssignmentProblem(
     cv::Mat dissimilarity;
     ComputeDissimilarityMatrix(track_ids, detections, descriptors,
                                dissimilarity);
-
-    auto res = KuhnMunkres().Solve(dissimilarity);
+    //auto res = KuhnMunkres().Solve(dissimilarity);
+	auto res = KuhnMunkres().BruteForce(dissimilarity);
 
     for (size_t i = 0; i < detections.size(); i++) {
         unmatched_detections.insert(i);
