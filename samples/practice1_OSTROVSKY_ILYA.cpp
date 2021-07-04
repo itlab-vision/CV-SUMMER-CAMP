@@ -19,7 +19,7 @@ const char* cmdOptions =
 
 int main(int argc, char** argv)
 {
-    // Process input arguments
+    // Process input arguments	
 
     CommandLineParser parser(argc, argv, cmdOptions);
     parser.about(cmdAbout);
@@ -27,21 +27,37 @@ int main(int argc, char** argv)
     if (parser.has("help"))
     {
         parser.printMessage();
-        return 0;
+        return -1;
     }
     if (!parser.check())
     {
         parser.printErrors();
-        return 0;
+        return -1;
     }
     
     // Load image
 
     String imgName(parser.get<String>("image"));
-	
-    // Filter image	
+	unsigned int newWidth = parser.get<unsigned>("width");
+	unsigned int newHeight = parser.get<unsigned>("height");
+	const String ResizedName = "Resized to :" + String(std::to_string(newWidth)) + "x" + String(std::to_string(newHeight));
+
+	Mat image = imread(imgName, IMREAD_COLOR);
+    
+    // Filter image
+	GrayFilter gFilter;
+	ResizeFilter rFilter(newWidth, newHeight);
 
     // Show image
+
+	namedWindow("Original", WINDOW_AUTOSIZE);
+	namedWindow("GrayFiltered", WINDOW_AUTOSIZE);
+	namedWindow(ResizedName, WINDOW_AUTOSIZE);
+
+	imshow("Original", image);
+	imshow("GrayFiltered", gFilter.ProcessImage(image));
+	imshow(ResizedName, rFilter.ProcessImage(image));
     
+	waitKey(0);
     return 0;
 }
