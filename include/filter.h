@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 
+#include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
@@ -19,6 +20,7 @@ private:
 
 public:
     Mat ProcessImage(Mat image);
+
 	
 };
 
@@ -28,8 +30,7 @@ private:
 	int width;
 	int height;
 public:
-    ResizeFilter(int newWidth, int newHeight);
-	
+	ResizeFilter(int newWidth, int newHeight);
     Mat ProcessImage(Mat image);
 	
 };

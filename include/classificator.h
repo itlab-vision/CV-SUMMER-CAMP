@@ -17,3 +17,19 @@ public:
     vector<string> classesNames;
     virtual Mat Classify(Mat image) = 0 {}
 };
+
+class DnnClassificator : Classificator
+{
+private:
+	int width;
+	int height;
+	string model_path;
+	string config_path;
+	string labels_path;
+	Scalar scalar;
+	bool mirror;
+	Net net;
+public:
+	DnnClassificator(string model_path, string config_path, string labels_path, int inputWidth, int inputHeight, bool mirror, Scalar scalar);
+	Mat Classify(Mat image);
+};
